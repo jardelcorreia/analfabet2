@@ -446,10 +446,10 @@ const dbHelpers = {
           u.name as user_name,
           u.email as user_email,
           u.avatar as user_avatar,
-          SUM(b.points) as total_points,
-          COUNT(CASE WHEN b.is_exact THEN 1 END) as exact_scores,
-          COUNT(b.id) as total_bets,
-          COUNT(CASE WHEN b.points > 0 THEN 1 END) as correct_results
+          COALESCE(SUM(b.points), 0) as total_points,
+          COALESCE(COUNT(CASE WHEN b.is_exact THEN 1 END), 0) as exact_scores,
+          COALESCE(COUNT(b.id), 0) as total_bets,
+          COALESCE(COUNT(CASE WHEN b.points > 0 THEN 1 END), 0) as correct_results
         FROM bets b
         INNER JOIN users u ON b.user_id = u.id
         INNER JOIN matches m ON b.match_id = m.id
@@ -489,10 +489,10 @@ const dbHelpers = {
           u.name as user_name,
           u.email as user_email,
           u.avatar as user_avatar,
-          SUM(b.points) as total_points,
-          COUNT(CASE WHEN b.is_exact THEN 1 END) as exact_scores,
-          COUNT(b.id) as total_bets,
-          COUNT(CASE WHEN b.points > 0 THEN 1 END) as correct_results
+          COALESCE(SUM(b.points), 0) as total_points,
+          COALESCE(COUNT(CASE WHEN b.is_exact THEN 1 END), 0) as exact_scores,
+          COALESCE(COUNT(b.id), 0) as total_bets,
+          COALESCE(COUNT(CASE WHEN b.points > 0 THEN 1 END), 0) as correct_results
         FROM bets b
         INNER JOIN users u ON b.user_id = u.id
         WHERE b.league_id = ${leagueId}
