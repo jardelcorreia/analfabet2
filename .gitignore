@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+.DS_Store
+coverage
+.vscode
+.idea
+.netlify
+/supabase/db/dump.sql
