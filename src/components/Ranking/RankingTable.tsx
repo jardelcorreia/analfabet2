@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Trophy, Target, BarChart3, Medal, Crown, Star, TrendingUp, ChevronDown, ChevronUp, Info, Search, Filter } from 'lucide-react';
 import { UserStats } from '../../types';
 import { RoundSelector } from './RoundSelector';
@@ -19,14 +19,15 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   totalRounds,
 }) => {
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
-  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [showTopOnly, setShowTopOnly] = React.useState(false);
 
-  React.useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
