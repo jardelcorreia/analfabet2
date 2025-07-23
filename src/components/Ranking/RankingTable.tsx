@@ -74,7 +74,10 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   });
 
   const getMedalIcon = (position: number) => {
-    if (ranking.length > 0 && ranking[0].total_points === 0) {
+    // CORREÇÃO: Verificar se TODOS os jogadores têm 0 pontos
+    const allPlayersHaveZeroPoints = ranking.length > 0 && ranking.every(player => player.total_points === 0);
+
+    if (allPlayersHaveZeroPoints) {
       return (
         <div className="w-8 h-8 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center border-2 border-gray-300 dark:border-gray-500">
           <span className="text-sm font-bold text-gray-600 dark:text-gray-200">{position}</span>
