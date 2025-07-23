@@ -596,7 +596,7 @@ const dbHelpers = {
       INNER JOIN league_members lm ON u.id = lm.user_id
       LEFT JOIN user_stats us ON u.id = us.user_id AND us.league_id = ${leagueId}
       WHERE lm.league_id = ${leagueId}
-      ORDER BY COALESCE(us.total_points, 0) DESC, u.name ASC
+      ORDER BY us.total_points DESC NULLS LAST, u.name ASC
     `;
   },
 
