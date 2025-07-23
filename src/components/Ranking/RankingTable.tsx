@@ -343,7 +343,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
         {/* Expanded Details Row - Desktop - Apenas visível em 'todas as rodadas' */}
         {selectedRound === 'all' && expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
           <tr className="bg-purple-50 dark:bg-purple-900/30 border-l-4 border-purple-200 dark:border-purple-700">
-            <td colSpan={7} className="px-4 sm:px-6 py-4">
+            <td colSpan={selectedRound === 'all' ? 7 : 6} className="px-4 sm:px-6 py-4">
               <div className="flex flex-col space-y-3">
                 <div className="flex items-center space-x-2">
                   <Crown className="w-5 h-5 text-purple-600 dark:text-purple-400" />
@@ -531,9 +531,11 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                 <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Placares Exatos
                 </th>
-                <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
-                  Rodadas Vencidas
-                </th>
+                {selectedRound === 'all' && (
+                  <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
+                    Rodadas Vencidas
+                  </th>
+                )}
                 <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
                   Apostas
                 </th>
