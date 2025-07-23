@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Trophy, Target, BarChart3, Medal, Crown, Star, TrendingUp, ChevronDown, ChevronUp, Info, Search, Filter } from 'lucide-react';
 import { UserStats } from '../../types';
 import { RoundSelector } from './RoundSelector';
@@ -19,14 +19,15 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   totalRounds,
 }) => {
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
-  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [showTopOnly, setShowTopOnly] = React.useState(false);
 
-  React.useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -184,11 +185,13 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                 <span className="text-gray-700 dark:text-gray-300">{userStat.exact_scores}</span>
               </div>
 
-              {/* Rounds Won */}
-              <div className="flex items-center space-x-1">
-                <Crown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                <span className="text-gray-700 dark:text-gray-300">{userStat.rounds_won || 0}</span>
-              </div>
+              {/* Rounds Won - Mobile - Apenas visível em 'todas as rodadas' */}
+              {selectedRound === 'all' && (
+                <div className="flex items-center space-x-1">
+                  <Crown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                  <span className="text-gray-700 dark:text-gray-300">{userStat.rounds_won || 0}</span>
+                </div>
+              )}
 
               {/* Accuracy */}
               <div className={`px-2 py-0.5 rounded-full text-xs font-medium ${getAccuracyColor(accuracy)}`}>
@@ -196,38 +199,40 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               </div>
             </div>
 
-            {/* Expand Button */}
-            {userStat.rounds_won > 0 && (
+            {/* Expand Button - Mobile - Apenas visível e funcional em 'todas as rodadas' */}
+            {selectedRound === 'all' && userStat.rounds_won > 0 && (
               <button
                 onClick={() => toggleRowExpansion(userStat.user_id)}
                 className="flex items-center space-x-1 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-200 transition-colors p-1"
               >
                 <span className="text-xs">Detalhes</span>
-                {expandedRows.has(userStat.user_id)
-                  ? <ChevronUp className="w-3 h-3" />
-                  : <ChevronDown className="w-3 h-3" />
-                }
+                {expandedRows.has(userStat.user_id) ? (
+                  <ChevronUp className="w-3 h-3" />
+                ) : (
+                  <ChevronDown className="w-3 h-3" />
+                )}
               </button>
             )}
           </div>
 
-          {/* Expanded Details */}
-          {expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
+          {/* Expanded Details - Mobile - Apenas visível em 'todas as rodadas' */}
+          {selectedRound === 'all' && expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
             <div className="mt-3 p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
               <div className="text-xs font-medium text-purple-800 dark:text-purple-200 mb-2">
                 Rodadas vencidas:
               </div>
               <div className="grid grid-cols-6 gap-1">
-                {userStat.rounds_won_list && userStat.rounds_won_list.slice(0, 12).map(round => (
-                  <div
-                    key={round}
-                    className="flex items-center justify-center bg-purple-100 dark:bg-purple-800 rounded px-1 py-0.5"
-                  >
-                    <span className="text-xs font-medium text-purple-800 dark:text-purple-200">
-                      R{round}
-                    </span>
-                  </div>
-                ))}
+                {userStat.rounds_won_list &&
+                  userStat.rounds_won_list.slice(0, 12).map((round) => (
+                    <div
+                      key={round}
+                      className="flex items-center justify-center bg-purple-100 dark:bg-purple-800 rounded px-1 py-0.5"
+                    >
+                      <span className="text-xs font-medium text-purple-800 dark:text-purple-200">
+                        R{round}
+                      </span>
+                    </div>
+                  ))}
                 {userStat.rounds_won_list && userStat.rounds_won_list.length > 12 && (
                   <div className="flex items-center justify-center text-xs text-purple-600 dark:text-purple-400 col-span-2">
                     +{userStat.rounds_won_list.length - 12} mais
@@ -297,22 +302,33 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               </div>
             </div>
           </td>
-          <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center hidden lg:table-cell">
-            <div className="flex items-center justify-center">
-              <div className="flex items-center space-x-1 bg-purple-100 dark:bg-purple-900/50 rounded-full px-3 py-1 cursor-pointer hover:bg-purple-200 dark:hover:bg-purple-800/50 transition-colors"
-                   onClick={() => toggleRowExpansion(userStat.user_id)}>
-                <Crown className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                <span className="text-sm font-medium text-purple-800 dark:text-purple-200">
-                  {userStat.rounds_won || 0}
-                </span>
-                {userStat.rounds_won > 0 && (
-                  expandedRows.has(userStat.user_id)
-                    ? <ChevronUp className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                    : <ChevronDown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                )}
+          {/* Rodadas Vencidas - Desktop - Apenas visível em 'todas as rodadas' */}
+          {selectedRound === 'all' && (
+            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center hidden lg:table-cell">
+              <div className="flex items-center justify-center">
+                <div
+                  className={`flex items-center space-x-1 bg-purple-100 dark:bg-purple-900/50 rounded-full px-3 py-1 ${
+                    userStat.rounds_won > 0
+                      ? 'cursor-pointer hover:bg-purple-200 dark:hover:bg-purple-800/50 transition-colors'
+                      : ''
+                  }`}
+                  onClick={() => userStat.rounds_won > 0 && toggleRowExpansion(userStat.user_id)} // Só permite clique se houver rodadas vencidas
+                >
+                  <Crown className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                  <span className="text-sm font-medium text-purple-800 dark:text-purple-200">
+                    {userStat.rounds_won || 0}
+                  </span>
+                  {userStat.rounds_won > 0 && (
+                    expandedRows.has(userStat.user_id) ? (
+                      <ChevronUp className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                    )
+                  )}
+                </div>
               </div>
-            </div>
-          </td>
+            </td>
+          )}
           <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center hidden md:table-cell">
             <span className="text-sm font-medium text-gray-900 dark:text-white">
               {userStat.total_bets}
@@ -324,7 +340,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             </span>
           </td>
         </tr>
-        {expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
+        {/* Expanded Details Row - Desktop - Apenas visível em 'todas as rodadas' */}
+        {selectedRound === 'all' && expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
           <tr className="bg-purple-50 dark:bg-purple-900/30 border-l-4 border-purple-200 dark:border-purple-700">
             <td colSpan={7} className="px-4 sm:px-6 py-4">
               <div className="flex flex-col space-y-3">
@@ -335,17 +352,18 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                   </span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
-                  {userStat.rounds_won_list && userStat.rounds_won_list.map(round => (
-                    <div
-                      key={round}
-                      className="flex items-center justify-center bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 rounded-lg px-3 py-2 transition-colors cursor-pointer"
-                      title={`Rodada ${round} - Clique para ver detalhes`}
-                    >
-                      <span className="text-sm font-medium text-purple-800 dark:text-purple-200">
-                        R{round}
-                      </span>
-                    </div>
-                  ))}
+                  {userStat.rounds_won_list &&
+                    userStat.rounds_won_list.map((round) => (
+                      <div
+                        key={round}
+                        className="flex items-center justify-center bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 rounded-lg px-3 py-2 transition-colors cursor-pointer"
+                        title={`Rodada ${round} - Clique para ver detalhes`}
+                      >
+                        <span className="text-sm font-medium text-purple-800 dark:text-purple-200">
+                          R{round}
+                        </span>
+                      </div>
+                    ))}
                 </div>
                 <div className="text-xs text-purple-600 dark:text-purple-400 flex items-center space-x-1">
                   <Info className="w-4 h-4" />
