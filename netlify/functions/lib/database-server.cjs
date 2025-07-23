@@ -491,8 +491,16 @@ const dbHelpers = {
 
     const roundsWonMap = await getRoundsWonData();
 
-    return liveRankingResult.map(row => {
+    let rank = 1;
+    let last_total_points = -1;
+    let last_exact_scores = -1;
+    return liveRankingResult.map((row, index) => {
       const roundsWonList = roundsWonMap.get(row.user_id) || [];
+      if (row.total_points !== last_total_points || row.exact_scores !== last_exact_scores) {
+        rank = index + 1;
+      }
+      last_total_points = row.total_points;
+      last_exact_scores = row.exact_scores;
       return {
         user_id: row.user_id,
         league_id: leagueId,
@@ -502,6 +510,8 @@ const dbHelpers = {
         correct_results: row.correct_results,
         rounds_won: roundsWonList.length,
         rounds_won_list: roundsWonList,
+        rounds_tied: row.rounds_tied,
+        rank: rank,
         user: {
           id: row.user_id,
           name: row.user_name,
