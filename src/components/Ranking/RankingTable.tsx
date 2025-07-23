@@ -185,12 +185,10 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               </div>
 
               {/* Rounds Won */}
-              {selectedRound === 'all' && (
-                <div className="flex items-center space-x-1">
-                  <Crown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                  <span className="text-gray-700 dark:text-gray-300">{userStat.rounds_won || 0}</span>
-                </div>
-              )}
+              <div className="flex items-center space-x-1">
+                <Crown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                <span className="text-gray-700 dark:text-gray-300">{userStat.rounds_won || 0}</span>
+              </div>
 
               {/* Accuracy */}
               <div className={`px-2 py-0.5 rounded-full text-xs font-medium ${getAccuracyColor(accuracy)}`}>
@@ -299,27 +297,22 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               </div>
             </div>
           </td>
-          {selectedRound === 'all' && (
-            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center hidden lg:table-cell">
-              <div className="flex items-center justify-center">
-                <div
-                  className="flex items-center space-x-1 bg-purple-100 dark:bg-purple-900/50 rounded-full px-3 py-1 cursor-pointer hover:bg-purple-200 dark:hover:bg-purple-800/50 transition-colors"
-                  onClick={() => toggleRowExpansion(userStat.user_id)}
-                >
-                  <Crown className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                  <span className="text-sm font-medium text-purple-800 dark:text-purple-200">
-                    {userStat.rounds_won || 0}
-                  </span>
-                  {userStat.rounds_won > 0 &&
-                    (expandedRows.has(userStat.user_id) ? (
-                      <ChevronUp className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                    ) : (
-                      <ChevronDown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                    ))}
-                </div>
+          <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center hidden lg:table-cell">
+            <div className="flex items-center justify-center">
+              <div className="flex items-center space-x-1 bg-purple-100 dark:bg-purple-900/50 rounded-full px-3 py-1 cursor-pointer hover:bg-purple-200 dark:hover:bg-purple-800/50 transition-colors"
+                   onClick={() => toggleRowExpansion(userStat.user_id)}>
+                <Crown className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                <span className="text-sm font-medium text-purple-800 dark:text-purple-200">
+                  {userStat.rounds_won || 0}
+                </span>
+                {userStat.rounds_won > 0 && (
+                  expandedRows.has(userStat.user_id)
+                    ? <ChevronUp className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                    : <ChevronDown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                )}
               </div>
-            </td>
-          )}
+            </div>
+          </td>
           <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center hidden md:table-cell">
             <span className="text-sm font-medium text-gray-900 dark:text-white">
               {userStat.total_bets}
@@ -331,7 +324,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             </span>
           </td>
         </tr>
-        {selectedRound === 'all' && expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
+        {expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
           <tr className="bg-purple-50 dark:bg-purple-900/30 border-l-4 border-purple-200 dark:border-purple-700">
             <td colSpan={7} className="px-4 sm:px-6 py-4">
               <div className="flex flex-col space-y-3">
