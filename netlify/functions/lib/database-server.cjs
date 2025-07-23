@@ -497,7 +497,7 @@ const dbHelpers = {
         INNER JOIN users u ON b.user_id = u.id
         WHERE b.league_id = ${leagueId}
         GROUP BY b.user_id, u.name, u.email, u.avatar
-        ORDER BY total_points DESC, exact_scores DESC
+        ORDER BY total_points DESC NULLS LAST, exact_scores DESC
       `;
 
     const roundsWonMap = await getRoundsWonData();
