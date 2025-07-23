@@ -457,18 +457,29 @@ const dbHelpers = {
         GROUP BY b.user_id, u.name, u.email, u.avatar
         ORDER BY total_points DESC, exact_scores DESC
       `;
-      return result.map(row => ({
-        ...row,
-        league_id: leagueId,
-        rounds_won: 0,
-        rounds_won_list: [],
-        user: {
-          id: row.user_id,
-          name: row.user_name,
-          email: row.user_email,
-          avatar: row.user_avatar,
+      let rank = 1;
+      let last_total_points = -1;
+      let last_exact_scores = -1;
+      return result.map((row, index) => {
+        if (row.total_points !== last_total_points || row.exact_scores !== last_exact_scores) {
+          rank = index + 1;
         }
-      }));
+        last_total_points = row.total_points;
+        last_exact_scores = row.exact_scores;
+        return {
+          ...row,
+          league_id: leagueId,
+          rounds_won: 0,
+          rounds_won_list: [],
+          rank: rank,
+          user: {
+            id: row.user_id,
+            name: row.user_name,
+            email: row.user_email,
+            avatar: row.user_avatar,
+          }
+        }
+      });
     }
 
     // For 'all' rounds, we will also calculate on the fly to get live results
