@@ -60,14 +60,14 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
   let lastPoints: number | null = null;
   let lastRank = 0;
-  let rankCounter = 1;
+  let nextRank = 1;
   sortedRanking.forEach((user, idx) => {
     if (user.total_points !== lastPoints) {
-      lastRank = rankCounter;
+      lastRank = nextRank;
     }
     user.rank = lastRank;
     lastPoints = user.total_points;
-    rankCounter++;
+    nextRank++;
   });
 
   // --- Update getMedalIcon to use rank ---
@@ -81,35 +81,41 @@ export const RankingTable: React.FC<RankingTableProps> = ({
         </div>
       );
     }
-    switch (rank) {
-      case 1:
-        return (
-          <div className="relative">
-            <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
-              <Crown className="w-5 h-5 text-white" />
-            </div>
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-pulse"></div>
+
+    const goldPlayers = sortedRanking.filter(p => p.rank === 1);
+    const silverRank = goldPlayers.length + 1;
+    const silverPlayers = sortedRanking.filter(p => p.rank === silverRank);
+    const bronzeRank = silverPlayers.length + silverRank;
+
+    if (rank === 1) {
+      return (
+        <div className="relative">
+          <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+            <Crown className="w-5 h-5 text-white" />
           </div>
-        );
-      case 2:
-        return (
-          <div className="w-8 h-8 bg-gradient-to-r from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-md">
-            <Medal className="w-5 h-5 text-white" />
-          </div>
-        );
-      case 3:
-        return (
-          <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-md">
-            <Medal className="w-5 h-5 text-white" />
-          </div>
-        );
-      default:
-        return (
-          <div className="w-8 h-8 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center border-2 border-gray-300 dark:border-gray-500">
-            <span className="text-sm font-bold text-gray-600 dark:text-gray-200">{rank}</span>
-          </div>
-        );
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-pulse"></div>
+        </div>
+      );
     }
+    if (rank === silverRank) {
+      return (
+        <div className="w-8 h-8 bg-gradient-to-r from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-md">
+          <Medal className="w-5 h-5 text-white" />
+        </div>
+      );
+    }
+    if (rank === bronzeRank) {
+      return (
+        <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-md">
+          <Medal className="w-5 h-5 text-white" />
+        </div>
+      );
+    }
+    return (
+      <div className="w-8 h-8 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center border-2 border-gray-300 dark:border-gray-500">
+        <span className="text-sm font-bold text-gray-600 dark:text-gray-200">{rank}</span>
+      </div>
+    );
   };
 
   const getRowClass = (userId: string, position: number) => {
@@ -396,8 +402,10 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
   if (!isMobile && sortedRanking.length >= 1 && !sortedRanking.every(player => player.total_points === 0)) {
     const goldPlayers = sortedRanking.filter(p => p.rank === 1);
-    const silverPlayers = sortedRanking.filter(p => p.rank === 2);
-    const bronzePlayers = sortedRanking.filter(p => p.rank === 3);
+    const silverRank = goldPlayers.length > 0 ? goldPlayers[goldPlayers.length - 1].rank + 1 : 2;
+    const silverPlayers = sortedRanking.filter(p => p.rank === silverRank);
+    const bronzeRank = silverPlayers.length > 0 ? silverPlayers[silverPlayers.length - 1].rank + 1 : silverRank + 1;
+    const bronzePlayers = sortedRanking.filter(p => p.rank === bronzeRank);
 
     podiumPositions = [
       {
