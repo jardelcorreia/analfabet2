@@ -16,6 +16,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   const isEmailFormat = (input: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -76,6 +77,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
         }
 
         await onSignUp(email.trim(), password, name.trim());
+        setSignUpSuccess(true);
       }
       
       const { setRememberMe: setRememberMeStorage } = await import('../../lib/storage');
@@ -110,6 +112,22 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
   };
 
   const LoginIcon = getLoginIcon();
+
+  if (signUpSuccess) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-yellow-400 dark:from-gray-800 dark:via-gray-900 dark:to-black flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 w-full max-w-sm text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-4">
+            <Mail className="w-8 h-8 text-green-600 dark:text-green-400" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Confirme seu email</h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Enviamos um email de confirmação para <strong>{email}</strong>. Por favor, verifique sua caixa de entrada e siga as instruções para ativar sua conta.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-yellow-400 dark:from-gray-800 dark:via-gray-900 dark:to-black flex items-center justify-center p-4">

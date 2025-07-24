@@ -41,10 +41,15 @@ const dbHelpers = {
     return result[0];
   },
 
-  async createUser(email, passwordHash, name) {
+  async getUserByConfirmationToken(token) {
+    const result = await sql`SELECT * FROM users WHERE confirmation_token = ${token}`;
+    return result[0];
+  },
+
+  async createUser(email, passwordHash, name, confirmationToken) {
     const result = await sql`
-      INSERT INTO users (email, password_hash, name)
-      VALUES (${email}, ${passwordHash}, ${name})
+      INSERT INTO users (email, password_hash, name, confirmation_token)
+      VALUES (${email}, ${passwordHash}, ${name}, ${confirmationToken})
       RETURNING *
     `;
     return result[0];

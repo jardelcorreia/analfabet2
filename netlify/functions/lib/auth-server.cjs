@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { dbHelpers } = require('./database-server.cjs');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 
 const JWT_SECRET = process.env.VITE_JWT_SECRET || 'fallback-secret';
 
@@ -40,6 +42,27 @@ const verifyToken = (token) => {
   }
 };
 
+const sendConfirmationEmail = async (user, token) => {
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: true,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const confirmationUrl = `${process.env.VITE_APP_URL}/confirm-email?token=${token}`;
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM,
+    to: user.email,
+    subject: 'Confirme seu email',
+    html: `Olá ${user.name},<br><br>Obrigado por se registrar! Por favor, clique no link a seguir para confirmar seu email:<br><br><a href="${confirmationUrl}">${confirmationUrl}</a><br><br>Se você não se registrou, ignore este email.<br><br>Atenciosamente,<br>Equipe AnalfaBet`,
+  });
+};
+
 const signUp = async (email, password, name) => {
   // Validações básicas
   if (!email || !password || !name) {
@@ -71,12 +94,15 @@ const signUp = async (email, password, name) => {
   }
 
   const hashedPassword = await hashPassword(password);
+  const confirmationToken = crypto.randomBytes(32).toString('hex');
 
-  const user = await dbHelpers.createUser(email, hashedPassword, name);
+  const user = await dbHelpers.createUser(email, hashedPassword, name, confirmationToken);
 
   if (!user || typeof user.id === 'undefined') {
     throw new Error('Falha ao criar usuário. Tente novamente.');
   }
+
+  await sendConfirmationEmail(user, confirmationToken);
 
   return {
     id: user.id,
@@ -113,6 +139,10 @@ const signIn = async (identifier, password) => {
 
   if (!user) {
     return null; // Usuário não encontrado
+  }
+
+  if (!user.email_confirmed) {
+    throw new Error('Please confirm your email before logging in.');
   }
 
   const isValid = await comparePassword(password, user.password_hash);
