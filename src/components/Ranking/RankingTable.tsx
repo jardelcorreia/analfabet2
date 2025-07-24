@@ -396,10 +396,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
   if (!isMobile && sortedRanking.length >= 1 && !sortedRanking.every(player => player.total_points === 0)) {
     const goldPlayers = sortedRanking.filter(p => p.rank === 1);
-    const silverRank = goldPlayers.length > 0 ? goldPlayers[goldPlayers.length - 1].rank + 1 : 2;
-    const silverPlayers = sortedRanking.filter(p => p.rank === silverRank);
-    const bronzeRank = silverPlayers.length > 0 ? silverPlayers[silverPlayers.length - 1].rank + 1 : silverRank + 1;
-    const bronzePlayers = sortedRanking.filter(p => p.rank === bronzeRank);
+    const silverPlayers = sortedRanking.filter(p => p.rank === 2);
+    const bronzePlayers = sortedRanking.filter(p => p.rank === 3);
 
     podiumPositions = [
       {
@@ -545,71 +543,16 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             <div className="flex justify-center items-end space-x-4 sm:space-x-8">
               {/* --- Calculate Podium Positions --- */}
               {(() => {
-                // 1. Get players for Gold (1st place rank)
-                const firstRank = sortedRanking.length > 0 ? sortedRanking[0].rank : null; // This should always be 1
-                const goldPlayers = sortedRanking.filter(p => p.rank === firstRank);
+                // Simplified podium logic
+                const goldPlayers = sortedRanking.filter(p => p.rank === 1);
+                const silverPlayers = sortedRanking.filter(p => p.rank === 2);
+                const bronzePlayers = sortedRanking.filter(p => p.rank === 3);
 
-                // 2. Find the *next* distinct rank for Silver
-                let silverRank: number | null = null;
-                if (goldPlayers.length > 0 && goldPlayers.length < sortedRanking.length) {
-                  // Find the first player whose rank is different from the firstRank
-                  const nextPlayer = sortedRanking.find(p => p.rank !== firstRank);
-                  if (nextPlayer) {
-                    silverRank = nextPlayer.rank; // This is the correct silver rank
-                  }
-                }
-                const silverPlayers = silverRank ? sortedRanking.filter(p => p.rank === silverRank) : [];
-
-                // 3. Find the *next* distinct rank for Bronze (after Silver)
-                let bronzeRank: number | null = null;
-                if (silverPlayers.length > 0) {
-                  // Find the first player whose rank is different from both firstRank and silverRank
-                  const nextPlayerAfterSilver = sortedRanking.find(p => p.rank !== firstRank && p.rank !== silverRank);
-                  if (nextPlayerAfterSilver) {
-                    bronzeRank = nextPlayerAfterSilver.rank; // This is the correct bronze rank
-                  }
-                }
-                const bronzePlayers = bronzeRank ? sortedRanking.filter(p => p.rank === bronzeRank) : [];
-
-                // 4. Create podium structure in the correct visual order: Silver (Left), Gold (Center), Bronze (Right)
-                const podiumStructure = (() => {
-                // 1. Get players for Gold (1st place rank)
-                const firstRank = sortedRanking.length > 0 ? sortedRanking[0].rank : null;
-                const goldPlayers = sortedRanking.filter(p => p.rank === firstRank);
-
-                // 2. Find the next distinct rank for Silver (2nd place)
-                let silverRank: number | null = null;
-                let silverPlayers: UserStats[] = [];
-                
-                if (goldPlayers.length > 0) {
-                  // Find the first player after gold players
-                  const nextPlayer = sortedRanking.find(p => p.rank > firstRank!);
-                  if (nextPlayer) {
-                    silverRank = nextPlayer.rank;
-                    silverPlayers = sortedRanking.filter(p => p.rank === silverRank);
-                  }
-                }
-
-                // 3. Find the next distinct rank for Bronze (3rd place)
-                let bronzeRank: number | null = null;
-                let bronzePlayers: UserStats[] = [];
-                
-                if (silverPlayers.length > 0) {
-                  // Find the first player after silver players
-                  const nextPlayer = sortedRanking.find(p => p.rank > silverRank!);
-                  if (nextPlayer) {
-                    bronzeRank = nextPlayer.rank;
-                    bronzePlayers = sortedRanking.filter(p => p.rank === bronzeRank);
-                  }
-                }
-
-                // Return in visual order: Silver (Left), Gold (Center), Bronze (Right)
-                return [
+                const podiumStructure = [
                   { players: silverPlayers, type: 'left', label: '2º', medalClass: "bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700" },
                   { players: goldPlayers, type: 'center', label: '1º', medalClass: "bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600" },
                   { players: bronzePlayers, type: 'right', label: '3º', medalClass: "bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700" }
                 ];
-              })();
 
                 return (
                   <>
