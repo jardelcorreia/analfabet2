@@ -46,7 +46,7 @@ const sendConfirmationEmail = async (user, token) => {
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
-    secure: true,
+    secure: false, // Mailtrap uses an insecure connection
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,

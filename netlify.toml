@@ -5,6 +5,9 @@
 [build.environment]
   NODE_VERSION = "18"
 
+[functions]
+  environment = { EMAIL_HOST = "sandbox.smtp.mailtrap.io", EMAIL_PORT = "2525", EMAIL_USER = "d1b2c3d4e5f6a7", EMAIL_PASS = "a1b2c3d4e5f6a7", EMAIL_FROM = "from@example.com", VITE_APP_URL = "http://localhost:8888" }
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
