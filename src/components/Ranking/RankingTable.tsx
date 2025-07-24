@@ -60,14 +60,14 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
   let lastPoints: number | null = null;
   let lastRank = 0;
-  let nextRank = 1;
+  let rankCounter = 1;
   sortedRanking.forEach((user, idx) => {
     if (user.total_points !== lastPoints) {
-      lastRank = nextRank;
+      lastRank = rankCounter;
     }
     user.rank = lastRank;
     lastPoints = user.total_points;
-    nextRank++;
+    rankCounter++;
   });
 
   // --- Update getMedalIcon to use rank ---
@@ -396,10 +396,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
   if (!isMobile && sortedRanking.length >= 1 && !sortedRanking.every(player => player.total_points === 0)) {
     const goldPlayers = sortedRanking.filter(p => p.rank === 1);
-    const silverRank = goldPlayers.length + 1;
-    const silverPlayers = sortedRanking.filter(p => p.rank === silverRank);
-    const bronzeRank = silverPlayers.length + silverRank;
-    const bronzePlayers = sortedRanking.filter(p => p.rank === bronzeRank);
+    const silverPlayers = sortedRanking.filter(p => p.rank === 2);
+    const bronzePlayers = sortedRanking.filter(p => p.rank === 3);
 
     podiumPositions = [
       {
