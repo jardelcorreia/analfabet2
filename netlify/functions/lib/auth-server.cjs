@@ -54,7 +54,7 @@ const sendConfirmationEmail = async (user, token) => {
     },
   });
 
-  const confirmationUrl = `${process.env.VITE_APP_URL}/confirm-email?token=${token}`;
+  const confirmationUrl = `${process.env.VITE_APP_URL}confirm-email?token=${token}`;
 
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,

@@ -30,7 +30,7 @@ exports.handler = async function(event, context) {
     return {
       statusCode: 302,
       headers: {
-        Location: `${process.env.VITE_APP_URL}/login?email_confirmed=true`,
+        Location: `${process.env.VITE_APP_URL}login?email_confirmed=true`,
       },
     };
   } catch (error) {
