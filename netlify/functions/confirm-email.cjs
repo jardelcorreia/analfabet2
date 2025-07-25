@@ -2,6 +2,7 @@ const { dbHelpers } = require('./lib/database-server.cjs');
 
 exports.handler = async function(event, context) {
   const { token } = event.queryStringParameters;
+  console.log('Confirmation token:', token);
 
   if (!token) {
     return {
@@ -12,6 +13,7 @@ exports.handler = async function(event, context) {
 
   try {
     const user = await dbHelpers.getUserByConfirmationToken(token);
+    console.log('User found:', user);
 
     if (!user) {
       return {
