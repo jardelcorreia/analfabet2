@@ -23,10 +23,7 @@ exports.handler = async function(event, context) {
       };
     }
 
-    await dbHelpers.updateUser(user.id, {
-      email_confirmed: true,
-      confirmation_token: null,
-    });
+    await dbHelpers.confirmUserEmail(user.id);
 
     return {
       statusCode: 302,

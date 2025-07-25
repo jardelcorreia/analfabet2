@@ -56,31 +56,86 @@ const dbHelpers = {
   },
 
   async updateUser(id, updates) {
-    try {
-      const fields = Object.keys(updates).map(key => {
-        if (key === 'password') {
-          return sql`password_hash = ${updates[key]}`;
-        }
-        return sql`"${sql(key)}" = ${updates[key]}`;
-      });
+  try {
+    if (Object.keys(updates).length === 0) return null;
 
-      if (fields.length === 0) return null;
+    // Handle each field explicitly to avoid SQL issues
+    const updateFields = [];
+    const values = [];
 
-      const query = sql`
-        UPDATE users
-        SET ${sql.join(fields, sql`, `)}, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ${id}
-        RETURNING id, email, name, created_at, avatar, email_confirmed
-      `;
-
-      const result = await query;
-      console.log('Update user result:', result);
-      return result[0];
-    } catch (error) {
-      console.error('Error updating user:', error);
-      throw error;
+    if (updates.email !== undefined) {
+      updateFields.push('email = $' + (values.length + 1));
+      values.push(updates.email);
     }
-  },
+
+    if (updates.password !== undefined) {
+      updateFields.push('password_hash = $' + (values.length + 1));
+      values.push(updates.password);
+    }
+
+    if (updates.name !== undefined) {
+      updateFields.push('name = $' + (values.length + 1));
+      values.push(updates.name);
+    }
+
+    if (updates.avatar !== undefined) {
+      updateFields.push('avatar = $' + (values.length + 1));
+      values.push(updates.avatar);
+    }
+
+    if (updates.email_confirmed !== undefined) {
+      updateFields.push('email_confirmed = $' + (values.length + 1));
+      values.push(updates.email_confirmed);
+    }
+
+    if (updates.confirmation_token !== undefined) {
+      updateFields.push('confirmation_token = $' + (values.length + 1));
+      values.push(updates.confirmation_token);
+    }
+
+    if (updateFields.length === 0) return null;
+
+    // Add updated_at and user ID
+    updateFields.push('updated_at = CURRENT_TIMESTAMP');
+    values.push(id);
+
+    const query = `
+      UPDATE users
+      SET ${updateFields.join(', ')}
+      WHERE id = $${values.length}
+      RETURNING id, email, name, created_at, avatar, email_confirmed
+    `;
+
+    console.log('Executing query:', query);
+    console.log('With values:', values);
+
+    const result = await sql.query(query, values);
+    console.log('Update user result:', result);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+},
+
+// Add this specific function for email confirmation
+async confirmUserEmail(userId) {
+  try {
+    const result = await sql`
+      UPDATE users
+      SET email_confirmed = true,
+          confirmation_token = null,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = ${userId}
+      RETURNING id, email, name, created_at, avatar, email_confirmed
+    `;
+    console.log('Email confirmation result:', result);
+    return result[0];
+  } catch (error) {
+    console.error('Error confirming email:', error);
+    throw error;
+  }
+}
 
   async deleteUser(id) {
     const result = await sql`DELETE FROM users WHERE id = ${id} RETURNING *`;
