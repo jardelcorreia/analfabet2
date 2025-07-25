@@ -56,25 +56,30 @@ const dbHelpers = {
   },
 
   async updateUser(id, updates) {
-    const fields = Object.keys(updates).map(key => {
-      if (key === 'password') {
-        return sql`password_hash = ${updates[key]}`;
-      }
-      return sql`${sql(key)} = ${updates[key]}`;
-    });
+    try {
+      const fields = Object.keys(updates).map(key => {
+        if (key === 'password') {
+          return sql`password_hash = ${updates[key]}`;
+        }
+        return sql`${sql(key)} = ${updates[key]}`;
+      });
 
-    if (fields.length === 0) return null;
+      if (fields.length === 0) return null;
 
-    const query = sql`
-      UPDATE users
-      SET ${sql.join(fields, sql`, `)}, updated_at = CURRENT_TIMESTAMP
-      WHERE id = ${id}
-      RETURNING id, email, name, created_at, avatar, email_confirmed
-    `;
+      const query = sql`
+        UPDATE users
+        SET ${sql.join(fields, sql`, `)}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+        RETURNING id, email, name, created_at, avatar, email_confirmed
+      `;
 
-    const result = await query;
-    console.log('Update user result:', result);
-    return result[0];
+      const result = await query;
+      console.log('Update user result:', result);
+      return result[0];
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw error;
+    }
   },
 
   async deleteUser(id) {
