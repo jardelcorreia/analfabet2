@@ -13,7 +13,7 @@ exports.handler = async function(event, context) {
 
   try {
     const user = await dbHelpers.getUserByConfirmationToken(token);
-    console.log('User found:', user);
+    console.log('User found by token:', user);
 
     if (!user) {
       return {
