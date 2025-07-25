@@ -3,7 +3,7 @@ import { User, Lock, Mail, Trophy, AtSign, Eye, EyeOff } from 'lucide-react';
 
 interface AuthFormProps {
   onSignIn: (identifier: string, password: string, rememberMe: boolean) => Promise<void>;
-  onSignUp: (email: string, password: string, name: string) => Promise<void>;
+  onSignUp: (email: string, password: string, name: string) => Promise<boolean>;
 }
 
 export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
@@ -76,12 +76,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
           return;
         }
 
-        await onSignUp(email.trim(), password, name.trim());
-        setSignUpSuccess(true);
+        const success = await onSignUp(email.trim(), password, name.trim());
+        if (success) {
+          setSignUpSuccess(true);
+        }
       }
-      
-      const { setRememberMe: setRememberMeStorage } = await import('../../lib/storage');
-      setRememberMeStorage(rememberMe);
+      if (isLogin) {
+        const { setRememberMe: setRememberMeStorage } = await import('../../lib/storage');
+        setRememberMeStorage(rememberMe);
+      }
     } catch (err: any) {
       console.error("AuthForm caught error:", err);
       let displayMessage = 'Erro desconhecido.';

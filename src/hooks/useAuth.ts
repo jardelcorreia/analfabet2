@@ -126,7 +126,7 @@ export const useAuth = () => {
     }
   };
 
-  const signUp = async (email: string, password: string, name: string) => {
+  const signUp = async (email: string, password: string, name: string): Promise<boolean> => {
     console.log('[useAuth.signUp] Attempting sign-up for:', email);
     try {
       console.log('[useAuth.signUp] Calling Netlify function /api/signup for:', email);
@@ -155,6 +155,7 @@ export const useAuth = () => {
 
       // Don't log the user in automatically. They need to confirm their email first.
       console.log('[useAuth.signUp] User created successfully. They need to confirm their email.');
+      return true;
 
     } catch (error: any) {
       console.error('[useAuth.signUp] Error during sign-up fetch process:', error.message || error);
