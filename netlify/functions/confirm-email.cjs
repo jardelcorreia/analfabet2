@@ -46,19 +46,25 @@ exports.handler = async function(event, context) {
     }
 
     // Step 2: Confirm the email using the specific function
-    console.log('Confirming email for user ID:', user.id);
+    console.log('Attempting to confirm email for user ID:', user.id);
     const updatedUser = await dbHelpers.confirmUserEmail(user.id);
-    console.log('Email confirmation completed:', updatedUser);
 
-    // Step 3: Verify the update worked
-    const verifyUser = await dbHelpers.getUserById(user.id);
-    console.log('Verification - user after update:', {
-      id: verifyUser.id,
-      email_confirmed: verifyUser.email_confirmed,
-      confirmation_token: verifyUser.confirmation_token
+    if (!updatedUser || !updatedUser.email_confirmed) {
+      console.error('Failed to update user email confirmation status.');
+      // Optional: Redirect to an error page
+      return {
+        statusCode: 302,
+        headers: {
+          Location: `${process.env.VITE_APP_URL}/email-confirmation-failed`,
+        },
+      };
+    }
+
+    console.log('Email confirmation successful for user ID:', user.id);
+    console.log('User status after update:', {
+      id: updatedUser.id,
+      email_confirmed: updatedUser.email_confirmed,
     });
-
-    await new Promise(resolve => setTimeout(resolve, 2000));
 
     return {
       statusCode: 302,
