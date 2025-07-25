@@ -135,7 +135,7 @@ async confirmUserEmail(userId) {
     console.error('Error confirming email:', error);
     throw error;
   }
-}
+},
 
   async deleteUser(id) {
     const result = await sql`DELETE FROM users WHERE id = ${id} RETURNING *`;
