@@ -69,10 +69,11 @@ const dbHelpers = {
       UPDATE users
       SET ${sql.join(fields, sql`, `)}, updated_at = CURRENT_TIMESTAMP
       WHERE id = ${id}
-      RETURNING id, email, name, created_at, avatar
+      RETURNING id, email, name, created_at, avatar, email_confirmed
     `;
 
     const result = await query;
+    console.log('Update user result:', result);
     return result[0];
   },
 
