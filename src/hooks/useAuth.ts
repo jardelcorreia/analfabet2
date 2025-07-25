@@ -153,16 +153,8 @@ export const useAuth = () => {
         throw new Error('Resposta inválida do servidor de cadastro.');
       }
 
-      // Salvar tudo no localStorage
-      setAuthToken(token);
-      setUser(userData);
-      setUserState(userData);
-
-      // Set session to expire in 24 hours by default for new sign-ups
-      console.log('[useAuth.signUp] Setting session (24 hours)');
-      setSessionExpiry(Date.now() + (24 * 60 * 60 * 1000));
-
-      console.log('[useAuth.signUp] Client state updated with token and user data.');
+      // Don't log the user in automatically. They need to confirm their email first.
+      console.log('[useAuth.signUp] User created successfully. They need to confirm their email.');
 
     } catch (error: any) {
       console.error('[useAuth.signUp] Error during sign-up fetch process:', error.message || error);
