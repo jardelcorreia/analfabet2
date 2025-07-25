@@ -11,6 +11,14 @@
   EMAIL_FROM = "from@example.com"
   VITE_APP_URL = "http://localhost:8888"
 
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/confirm-email"
+  to = "/.netlify/functions/confirm-email"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
