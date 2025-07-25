@@ -58,6 +58,8 @@ exports.handler = async function(event, context) {
       confirmation_token: verifyUser.confirmation_token
     });
 
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
     return {
       statusCode: 302,
       headers: {
