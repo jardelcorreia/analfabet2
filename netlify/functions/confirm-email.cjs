@@ -1,8 +1,11 @@
 const { dbHelpers } = require('./lib/database-server.cjs');
 
 exports.handler = async function(event, context) {
-  console.log('confirm-email function invoked');
+  console.log('Confirm-email function invoked at:', new Date().toISOString());
   console.log('Event:', JSON.stringify(event, null, 2));
+  console.log('Context:', JSON.stringify(context, null, 2));
+  console.log('Environment variables:', JSON.stringify(process.env, null, 2));
+
 
   const { token } = event.queryStringParameters || {};
   console.log('Confirmation token:', token);
