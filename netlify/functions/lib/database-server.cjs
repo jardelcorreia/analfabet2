@@ -61,7 +61,7 @@ const dbHelpers = {
         if (key === 'password') {
           return sql`password_hash = ${updates[key]}`;
         }
-        return sql`${sql(key)} = ${updates[key]}`;
+        return sql`"${sql(key)}" = ${updates[key]}`;
       });
 
       if (fields.length === 0) return null;

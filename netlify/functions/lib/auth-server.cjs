@@ -65,52 +65,57 @@ const sendConfirmationEmail = async (user, token) => {
 };
 
 const signUp = async (email, password, name) => {
-  // Validações básicas
-  if (!email || !password || !name) {
-    throw new Error('Email, senha e nome são obrigatórios');
+  try {
+    // Validações básicas
+    if (!email || !password || !name) {
+      throw new Error('Email, senha e nome são obrigatórios');
+    }
+
+    if (!isEmailFormat(email)) {
+      throw new Error('Formato de email inválido');
+    }
+
+    if (!isValidUsername(name)) {
+      throw new Error('Nome de usuário deve ter pelo menos 2 caracteres e não conter @ ou espaços');
+    }
+
+    if (password.length < 6) {
+      throw new Error('Senha deve ter pelo menos 6 caracteres');
+    }
+
+    // Verificar se email já existe
+    const existingUserByEmail = await dbHelpers.getUserByEmail(email);
+    if (existingUserByEmail) {
+      throw new Error('Este email já está em uso');
+    }
+
+    // Verificar se nome de usuário já existe
+    const existingUserByName = await dbHelpers.getUserByName(name);
+    if (existingUserByName) {
+      throw new Error('Este nome de usuário já está em uso');
+    }
+
+    const hashedPassword = await hashPassword(password);
+    const confirmationToken = crypto.randomBytes(32).toString('hex');
+
+    const user = await dbHelpers.createUser(email, hashedPassword, name, confirmationToken);
+
+    if (!user || typeof user.id === 'undefined') {
+      throw new Error('Falha ao criar usuário. Tente novamente.');
+    }
+
+    await sendConfirmationEmail(user, confirmationToken);
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      created_at: user.created_at
+    };
+  } catch (error) {
+    console.error('Error in signUp function:', error);
+    throw error;
   }
-
-  if (!isEmailFormat(email)) {
-    throw new Error('Formato de email inválido');
-  }
-
-  if (!isValidUsername(name)) {
-    throw new Error('Nome de usuário deve ter pelo menos 2 caracteres e não conter @ ou espaços');
-  }
-
-  if (password.length < 6) {
-    throw new Error('Senha deve ter pelo menos 6 caracteres');
-  }
-
-  // Verificar se email já existe
-  const existingUserByEmail = await dbHelpers.getUserByEmail(email);
-  if (existingUserByEmail) {
-    throw new Error('Este email já está em uso');
-  }
-
-  // Verificar se nome de usuário já existe
-  const existingUserByName = await dbHelpers.getUserByName(name);
-  if (existingUserByName) {
-    throw new Error('Este nome de usuário já está em uso');
-  }
-
-  const hashedPassword = await hashPassword(password);
-  const confirmationToken = crypto.randomBytes(32).toString('hex');
-
-  const user = await dbHelpers.createUser(email, hashedPassword, name, confirmationToken);
-
-  if (!user || typeof user.id === 'undefined') {
-    throw new Error('Falha ao criar usuário. Tente novamente.');
-  }
-
-  await sendConfirmationEmail(user, confirmationToken);
-
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    created_at: user.created_at
-  };
 };
 
 const signIn = async (identifier, password) => {
