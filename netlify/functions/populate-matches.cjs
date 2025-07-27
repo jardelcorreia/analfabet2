@@ -8,6 +8,7 @@ const getStatus = (apiStatus) => {
   if (!apiStatus) return 'unknown';
 
   const lowerCaseStatus = apiStatus.toLowerCase();
+  console.log(`[getStatus] API status: ${lowerCaseStatus}`);
 
   // Match finished/completed games
   if (lowerCaseStatus.includes('finished') ||
@@ -15,7 +16,9 @@ const getStatus = (apiStatus) => {
       lowerCaseStatus.includes('ft') ||
       lowerCaseStatus.includes('full time') ||
       lowerCaseStatus.includes('final') ||
-      lowerCaseStatus.includes('complete')) {
+      lowerCaseStatus.includes('complete') ||
+      lowerCaseStatus.includes('aet') || // After Extra Time
+      lowerCaseStatus.includes('pen.')) { // Penalties
     return 'finished';
   }
 
@@ -38,8 +41,16 @@ const getStatus = (apiStatus) => {
       lowerCaseStatus.includes('cancelled') ||
       lowerCaseStatus.includes('canceled') ||
       lowerCaseStatus.includes('suspended') ||
-      lowerCaseStatus.includes('delayed')) {
+      lowerCaseStatus.includes('delayed') ||
+      lowerCaseStatus.includes('abandoned')) {
     return 'postponed';
+  }
+
+  // Match not started
+  if (lowerCaseStatus.includes('not started') ||
+      lowerCaseStatus.includes('scheduled') ||
+      lowerCaseStatus.includes('tba')) {
+    return 'scheduled';
   }
 
   // Default to scheduled for upcoming games
@@ -60,7 +71,7 @@ exports.handler = async function(event, context) {
     const roundsToFetch = singleRound ? [singleRound] : Array.from({ length: 38 }, (_, i) => i + 1);
 
     for (const round of roundsToFetch) {
-      const url = API_URL.replace('{API_KEY}', API_KEY).replace('{round}', round);
+      const url = API_URL.replace('{API_KEY}', API_KEY).replace('{round}', round) + `&_=${new Date().getTime()}`;
       const response = await axios.get(url);
 
       const matches = response.data.events;

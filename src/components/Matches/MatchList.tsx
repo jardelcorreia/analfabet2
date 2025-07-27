@@ -28,13 +28,6 @@ export const MatchList: React.FC<MatchListProps> = ({
 }) => {
   const [userBets, setUserBets] = useState<Bet[]>([]);
 
-  React.useEffect(() => {
-    if (displayedRound !== undefined && selectedRound !== displayedRound && selectedRound !== 'all') {
-      if (selectedRound === undefined) {
-        onRoundChange(displayedRound);
-      }
-    }
-  }, [displayedRound, selectedRound, onRoundChange]);
 
   React.useEffect(() => {
     const fetchUserBets = async () => {
