@@ -11,16 +11,7 @@ class SportsDB_API {
       throw new Error(`API Error: ${response.status}`);
     }
 
-    const data = await response.json();
-
-    // Log the event status for debugging
-    if (data.events) {
-      data.events.forEach((event: SportsDbEvent) => {
-        console.log(`Event: ${event.strEvent}, Status: ${event.strStatus}`);
-      });
-    }
-
-    return data;
+    return response.json();
   }
 
   async getBrasileiroMatches(season: string = '2024'): Promise<SportsDbEvent[]> {
