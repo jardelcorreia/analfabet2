@@ -23,21 +23,32 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
   const [selectedRound, setSelectedRound] = useState<number | 'all' | undefined>(undefined);
   
   const { leagues, loading: leaguesLoading, createLeague, joinLeague } = useLeagues(user.id);
-  const { ranking, loading: rankingLoading, displayedRound: rankingDisplayedRound } = useRanking(selectedLeague?.id || '', selectedRound);
+  const { ranking, loading: rankingLoading, displayedRound: rankingDisplayedRound, refreshRanking } = useRanking(selectedLeague?.id || '', selectedRound);
   const { matches, loading: matchesLoading, error: matchesError, displayedRound: matchesDisplayedRound, refreshMatches } = useMatches(selectedRound);
 
   useEffect(() => {
-    if (rankingDisplayedRound !== undefined && selectedRound !== rankingDisplayedRound && selectedRound !== 'all') {
+    if (activeTab === 'matches' && matchesDisplayedRound !== undefined && selectedRound !== matchesDisplayedRound && selectedRound !== 'all') {
+      if (selectedRound === undefined) {
+        setSelectedRound(matchesDisplayedRound);
+      }
+    }
+  }, [matchesDisplayedRound, selectedRound, activeTab]);
+
+  useEffect(() => {
+    if (activeTab === 'ranking' && rankingDisplayedRound !== undefined && selectedRound !== rankingDisplayedRound && selectedRound !== 'all') {
       if (selectedRound === undefined) {
         setSelectedRound(rankingDisplayedRound);
       }
     }
-  }, [rankingDisplayedRound, selectedRound]);
+  }, [rankingDisplayedRound, selectedRound, activeTab]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     if (tab === 'matches') {
       refreshMatches();
+    }
+    if (tab === 'ranking') {
+      refreshRanking();
     }
   };
 

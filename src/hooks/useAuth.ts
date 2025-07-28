@@ -126,6 +126,43 @@ export const useAuth = () => {
     }
   };
 
+  const signUp = async (email: string, password: string, name: string): Promise<boolean> => {
+    console.log('[useAuth.signUp] Attempting sign-up for:', email);
+    try {
+      console.log('[useAuth.signUp] Calling Netlify function /api/signup for:', email);
+      const response = await fetch('/.netlify/functions/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, name }),
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        console.error('[useAuth.signUp] SignUp failed via Netlify function:', responseData.error || response.statusText);
+        throw new Error(responseData.error || 'Falha no cadastro. Verifique os dados inseridos.');
+      }
+
+      console.log('[useAuth.signUp] SignUp successful via Netlify function. Response data:', responseData);
+      const { token, user: userData } = responseData;
+
+      if (!token || !userData) {
+        console.error('[useAuth.signUp] Invalid response from signup function - missing token or user data.');
+        throw new Error('Resposta inválida do servidor de cadastro.');
+      }
+
+      // Don't log the user in automatically. They need to confirm their email first.
+      console.log('[useAuth.signUp] User created successfully. They need to confirm their email.');
+      return true;
+
+    } catch (error: any) {
+      console.error('[useAuth.signUp] Error during sign-up fetch process:', error.message || error);
+      throw new Error(error.message || 'Erro ao tentar fazer o cadastro.');
+    }
+  };
+
   const signOut = async () => {
     console.log('[useAuth.signOut] Signing out user');
     removeAuthToken(); // Isso já limpa tudo incluindo REMEMBER_ME_KEY
@@ -136,6 +173,7 @@ export const useAuth = () => {
     user,
     loading,
     signIn,
+    signUp,
     signOut
   };
 };

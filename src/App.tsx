@@ -1,6 +1,8 @@
 import React from 'react';
 import { useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthForm } from './components/Auth/AuthForm';
+import { EmailConfirmed } from './components/Auth/EmailConfirmed';
 import { Dashboard } from './components/Dashboard/Dashboard';
 import { useAuth } from './hooks/useAuth';
 import { isSessionExpired, removeAuthToken } from './lib/storage';
@@ -44,20 +46,12 @@ function App() {
     );
   }
 
-  if (!user) {
-    return (
-      <AuthForm
-        onSignIn={signIn}
-        onSignUp={signUp}
-      />
-    );
-  }
-
   return (
-    <Dashboard
-      user={user}
-      onSignOut={signOut}
-    />
+    <Routes>
+      <Route path="/login" element={!user ? <AuthForm onSignIn={signIn} onSignUp={signUp} /> : <Navigate to="/" />} />
+      <Route path="/email-confirmed" element={<EmailConfirmed />} />
+      <Route path="/" element={user ? <Dashboard user={user} onSignOut={signOut} /> : <Navigate to="/login" />} />
+    </Routes>
   );
 }
 

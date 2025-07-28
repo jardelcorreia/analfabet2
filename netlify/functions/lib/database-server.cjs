@@ -41,34 +41,87 @@ const dbHelpers = {
     return result[0];
   },
 
-  async createUser(email, passwordHash, name) {
+  async getUserByConfirmationToken(token) {
+    const result = await sql`SELECT * FROM users WHERE confirmation_token = ${token}`;
+    return result[0];
+  },
+
+  async createUser(email, passwordHash, name, confirmationToken) {
     const result = await sql`
-      INSERT INTO users (email, password_hash, name)
-      VALUES (${email}, ${passwordHash}, ${name})
+      INSERT INTO users (email, password_hash, name, confirmation_token)
+      VALUES (${email}, ${passwordHash}, ${name}, ${confirmationToken})
       RETURNING *
     `;
     return result[0];
   },
 
   async updateUser(id, updates) {
-    const fields = Object.keys(updates).map(key => {
-      if (key === 'password') {
-        return sql`password_hash = ${updates[key]}`;
+    // This function is deprecated and should not be used for email confirmation.
+    // It is kept for other update operations but should be refactored.
+    try {
+      if (Object.keys(updates).length === 0) return null;
+
+      const updateFields = [];
+      const values = [];
+
+      // Explicitly handle each updatable field
+      if (updates.email !== undefined) {
+        updateFields.push(`email = $${values.length + 1}`);
+        values.push(updates.email);
       }
-      return sql`${sql(key)} = ${updates[key]}`;
-    });
+      if (updates.password !== undefined) {
+        updateFields.push(`password_hash = $${values.length + 1}`);
+        values.push(updates.password);
+      }
+      if (updates.name !== undefined) {
+        updateFields.push(`name = $${values.length + 1}`);
+        values.push(updates.name);
+      }
+      if (updates.avatar !== undefined) {
+        updateFields.push(`avatar = $${values.length + 1}`);
+        values.push(updates.avatar);
+      }
 
-    if (fields.length === 0) return null;
+      if (updateFields.length === 0) return null;
 
-    const query = sql`
-      UPDATE users
-      SET ${sql.join(fields, sql`, `)}, updated_at = CURRENT_TIMESTAMP
-      WHERE id = ${id}
-      RETURNING id, email, name, created_at, avatar
-    `;
+      updateFields.push('updated_at = CURRENT_TIMESTAMP');
+      values.push(id);
 
-    const result = await query;
-    return result[0];
+      const query = `
+        UPDATE users
+        SET ${updateFields.join(', ')}
+        WHERE id = $${values.length}
+        RETURNING id, email, name, created_at, avatar, email_confirmed
+      `;
+
+      console.log('Executing deprecated update query:', query);
+      console.log('With values:', values);
+
+      const result = await sql.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error updating user with deprecated function:', error);
+      throw error;
+    }
+  },
+
+  // Specific function for email confirmation
+  async confirmUserEmail(userId) {
+    try {
+      const result = await sql`
+        UPDATE users
+        SET email_confirmed = TRUE,
+            confirmation_token = NULL,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${userId}
+        RETURNING id, email, name, created_at, avatar, email_confirmed
+      `;
+      console.log('Email confirmation result:', result);
+      return result[0];
+    } catch (error) {
+      console.error('Error confirming email:', error);
+      throw error;
+    }
   },
 
   async deleteUser(id) {
@@ -446,10 +499,10 @@ const dbHelpers = {
           u.name as user_name,
           u.email as user_email,
           u.avatar as user_avatar,
-          SUM(b.points) as total_points,
-          COUNT(CASE WHEN b.is_exact THEN 1 END) as exact_scores,
-          COUNT(b.id) as total_bets,
-          COUNT(CASE WHEN b.points > 0 THEN 1 END) as correct_results
+          COALESCE(SUM(b.points), 0) as total_points,
+          COALESCE(COUNT(CASE WHEN b.is_exact THEN 1 END), 0) as exact_scores,
+          COALESCE(COUNT(b.id), 0) as total_bets,
+          COALESCE(COUNT(CASE WHEN b.points > 0 THEN 1 END), 0) as correct_results
         FROM bets b
         INNER JOIN users u ON b.user_id = u.id
         INNER JOIN matches m ON b.match_id = m.id
@@ -457,18 +510,29 @@ const dbHelpers = {
         GROUP BY b.user_id, u.name, u.email, u.avatar
         ORDER BY total_points DESC, exact_scores DESC
       `;
-      return result.map(row => ({
-        ...row,
-        league_id: leagueId,
-        rounds_won: 0,
-        rounds_won_list: [],
-        user: {
-          id: row.user_id,
-          name: row.user_name,
-          email: row.user_email,
-          avatar: row.user_avatar,
+      let rank = 1;
+      let last_total_points = -1;
+      let last_exact_scores = -1;
+      return result.map((row, index) => {
+        if (row.total_points !== last_total_points || row.exact_scores !== last_exact_scores) {
+          rank = index + 1;
         }
-      }));
+        last_total_points = row.total_points;
+        last_exact_scores = row.exact_scores;
+        return {
+          ...row,
+          league_id: leagueId,
+          rounds_won: 0,
+          rounds_won_list: [],
+          rank: rank,
+          user: {
+            id: row.user_id,
+            name: row.user_name,
+            email: row.user_email,
+            avatar: row.user_avatar,
+          }
+        }
+      });
     }
 
     // For 'all' rounds, we will also calculate on the fly to get live results
@@ -478,21 +542,29 @@ const dbHelpers = {
           u.name as user_name,
           u.email as user_email,
           u.avatar as user_avatar,
-          SUM(b.points) as total_points,
-          COUNT(CASE WHEN b.is_exact THEN 1 END) as exact_scores,
-          COUNT(b.id) as total_bets,
-          COUNT(CASE WHEN b.points > 0 THEN 1 END) as correct_results
+          COALESCE(SUM(b.points), 0) as total_points,
+          COALESCE(COUNT(CASE WHEN b.is_exact THEN 1 END), 0) as exact_scores,
+          COALESCE(COUNT(b.id), 0) as total_bets,
+          COALESCE(COUNT(CASE WHEN b.points > 0 THEN 1 END), 0) as correct_results
         FROM bets b
         INNER JOIN users u ON b.user_id = u.id
         WHERE b.league_id = ${leagueId}
         GROUP BY b.user_id, u.name, u.email, u.avatar
-        ORDER BY total_points DESC, exact_scores DESC
+        ORDER BY total_points DESC NULLS LAST, exact_scores DESC
       `;
 
     const roundsWonMap = await getRoundsWonData();
 
-    return liveRankingResult.map(row => {
+    let rank = 1;
+    let last_total_points = -1;
+    let last_exact_scores = -1;
+    return liveRankingResult.map((row, index) => {
       const roundsWonList = roundsWonMap.get(row.user_id) || [];
+      if (row.total_points !== last_total_points || row.exact_scores !== last_exact_scores) {
+        rank = index + 1;
+      }
+      last_total_points = row.total_points;
+      last_exact_scores = row.exact_scores;
       return {
         user_id: row.user_id,
         league_id: leagueId,
@@ -502,6 +574,8 @@ const dbHelpers = {
         correct_results: row.correct_results,
         rounds_won: roundsWonList.length,
         rounds_won_list: roundsWonList,
+        rounds_tied: row.rounds_tied,
+        rank: rank,
         user: {
           id: row.user_id,
           name: row.user_name,
@@ -575,7 +649,7 @@ const dbHelpers = {
       INNER JOIN league_members lm ON u.id = lm.user_id
       LEFT JOIN user_stats us ON u.id = us.user_id AND us.league_id = ${leagueId}
       WHERE lm.league_id = ${leagueId}
-      ORDER BY COALESCE(us.total_points, 0) DESC, u.name ASC
+      ORDER BY us.total_points DESC NULLS LAST, u.name ASC
     `;
   },
 
