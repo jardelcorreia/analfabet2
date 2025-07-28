@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AuthUser } from '../../lib/auth';
 import { League } from '../../types';
-import { Header } from '../Layout/Header';
-import { Navigation } from '../Layout/Navigation';
+import Header from '../Layout/Header';
+import Navigation from '../Layout/Navigation';
 import { LeagueList } from '../Leagues/LeagueList';
 import { LeagueMembers } from '../Leagues/LeagueMembers';
 import { MatchList } from '../Matches/MatchList';

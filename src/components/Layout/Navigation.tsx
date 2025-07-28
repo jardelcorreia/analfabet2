@@ -6,7 +6,7 @@ interface NavigationProps {
   onTabChange: (tab: string) => void;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
+export default function Navigation({ activeTab, onTabChange }: NavigationProps) {
   const tabs = [
     { id: 'leagues', label: 'Ligas', icon: Trophy },
     { id: 'matches', label: 'Jogos', icon: Calendar },
