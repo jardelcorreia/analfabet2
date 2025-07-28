@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AuthUser } from '../../lib/auth';
 import { League } from '../../types';
-import Header from '../Layout/Header';
-import Navigation from '../Layout/Navigation';
+import { Header } from '../Layout/Header';
+import { Navigation } from '../Layout/Navigation';
 import { LeagueList } from '../Leagues/LeagueList';
 import { LeagueMembers } from '../Leagues/LeagueMembers';
 import { MatchList } from '../Matches/MatchList';
@@ -24,7 +24,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
   
   const { leagues, loading: leaguesLoading, createLeague, joinLeague } = useLeagues(user.id);
   const { ranking, loading: rankingLoading, displayedRound: rankingDisplayedRound, refreshRanking } = useRanking(selectedLeague?.id || '', selectedRound);
-  const { matches, loading: matchesLoading, error: matchesError, displayedRound: matchesDisplayedRound, refreshMatches } = useMatches(selectedRound || matchesDisplayedRound);
+  const { matches, loading: matchesLoading, error: matchesError, displayedRound: matchesDisplayedRound, refreshMatches } = useMatches(selectedRound);
 
   useEffect(() => {
     if (activeTab === 'matches' && matchesDisplayedRound !== undefined && selectedRound !== matchesDisplayedRound && selectedRound !== 'all') {

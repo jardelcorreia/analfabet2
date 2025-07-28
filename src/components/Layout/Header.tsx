@@ -7,7 +7,7 @@ interface HeaderProps {
   onSignOut: () => void;
 }
 
-export default function Header({ userName, onSignOut }: HeaderProps) {
+export const Header: React.FC<HeaderProps> = ({ userName, onSignOut }) => {
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem('theme') === 'dark'
   );
