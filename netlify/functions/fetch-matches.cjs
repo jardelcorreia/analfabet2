@@ -57,10 +57,14 @@ exports.handler = async function(event, context) {
       console.log(`[fetch-matches] Updating and fetching matches for specific round: ${targetRound}`);
       const { handler: populateMatches } = require('./populate-matches.cjs');
       await populateMatches({ queryStringParameters: { round: targetRound } });
+      allMatches = await dbHelpers.getMatches(); // Re-fetch matches after update
       matches = allMatches.filter(m => m.round === targetRound);
     } else {
       targetRound = determineDefaultRound(allMatches, today);
-      console.log(`[fetch-matches] No round specified, determined default round: ${targetRound}`);
+      console.log(`[fetch-matches] Updating and fetching matches for default round: ${targetRound}`);
+      const { handler: populateMatches } = require('./populate-matches.cjs');
+      await populateMatches({ queryStringParameters: { round: targetRound } });
+      allMatches = await dbHelpers.getMatches(); // Re-fetch matches after update
       matches = allMatches.filter(m => m.round === targetRound);
     }
 
