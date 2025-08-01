@@ -1,6 +1,7 @@
 const determineDefaultRound = (allMatches, today = new Date()) => {
   const roundsData = {};
-
+  
+  // Organizar dados das rodadas
   allMatches.forEach(match => {
     if (!roundsData[match.round]) {
       roundsData[match.round] = {
@@ -22,61 +23,58 @@ const determineDefaultRound = (allMatches, today = new Date()) => {
   if (roundNumbers.length === 0) return 1;
 
   today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
 
-  let activeRounds = [];
-  let futureIncompleteRounds = [];
-
+  // 1. Prioridade: Verificar se alguma rodada começa hoje ou amanhã
   for (const roundNum of roundNumbers) {
     const round = roundsData[roundNum];
+    if (round.allFinished) continue;
+
     const roundStartDate = new Date(round.startDate);
     roundStartDate.setHours(0, 0, 0, 0);
 
-    if (roundStartDate <= today && !round.allFinished) {
-      activeRounds.push(roundNum);
-    } else if (roundStartDate > today && !round.allFinished) {
-      futureIncompleteRounds.push(roundNum);
+    // Se a rodada começa hoje ou amanhã, seleciona-a
+    if (
+      roundStartDate.getTime() === today.getTime() || 
+      roundStartDate.getTime() === tomorrow.getTime()
+    ) {
+      return roundNum;
     }
   }
 
-  let defaultRound;
-  if (activeRounds.length > 0) {
-    defaultRound = Math.max(...activeRounds);
-  } else if (futureIncompleteRounds.length > 0) {
-    defaultRound = Math.min(...futureIncompleteRounds);
-  } else {
-    defaultRound = Math.max(...roundNumbers);
-  }
-
-  const nextRoundNumber = defaultRound + 1;
-  if (roundsData[nextRoundNumber]) {
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const nextRoundStartDate = new Date(roundsData[nextRoundNumber].startDate);
-    nextRoundStartDate.setHours(0, 0, 0, 0);
-
-    if (nextRoundStartDate.getTime() === tomorrow.getTime()) {
-      return nextRoundNumber;
-    }
-  }
-
-  // Look ahead for the next round that starts tomorrow
+  // 2. Se não há rodada começando em breve, encontrar a última rodada completamente finalizada
+  let lastFinishedRound = null;
   for (const roundNum of roundNumbers) {
-    if (roundNum > defaultRound) {
-      const round = roundsData[roundNum];
-      const roundStartDate = new Date(round.startDate);
-      roundStartDate.setHours(0, 0, 0, 0);
-
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(0, 0, 0, 0);
-
-      if (roundStartDate.getTime() === tomorrow.getTime()) {
-        return roundNum;
-      }
+    if (roundsData[roundNum].allFinished) {
+      lastFinishedRound = roundNum;
     }
   }
 
-  return defaultRound;
+  if (lastFinishedRound) {
+    // 3. Verificar se a próxima rodada (após a última finalizada) já começou
+    const nextRoundNumber = lastFinishedRound + 1;
+    const nextRound = roundsData[nextRoundNumber];
+    
+    if (nextRound && !nextRound.allFinished) {
+      const nextRoundStartDate = new Date(nextRound.startDate);
+      const now = new Date(); // Hora atual completa para comparação precisa
+      
+      // Se a próxima rodada já começou, mostrar ela
+      if (nextRoundStartDate <= now) {
+        return nextRoundNumber;
+      } else {
+        // Se a próxima rodada ainda não começou, mostrar a última finalizada
+        return lastFinishedRound;
+      }
+    } else {
+      // Se não há próxima rodada ou ela está finalizada, mostrar a última finalizada
+      return lastFinishedRound;
+    }
+  }
+
+  // 4. Fallback: Se nenhuma rodada foi finalizada ainda, mostrar a primeira rodada
+  return roundNumbers.length > 0 ? roundNumbers[0] : 1;
 };
 
 module.exports = { determineDefaultRound };
