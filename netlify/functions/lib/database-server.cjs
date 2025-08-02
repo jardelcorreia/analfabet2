@@ -524,13 +524,20 @@ const dbHelpers = {
       let last_total_points = -1;
       let last_exact_scores = -1;
       return result.map((row, index) => {
-        if (row.total_points !== last_total_points || row.exact_scores !== last_exact_scores) {
+        const total_points = Number(row.total_points);
+        const exact_scores = Number(row.exact_scores);
+
+        if (total_points !== last_total_points || exact_scores !== last_exact_scores) {
           rank = index + 1;
         }
-        last_total_points = row.total_points;
-        last_exact_scores = row.exact_scores;
+        last_total_points = total_points;
+        last_exact_scores = exact_scores;
         return {
           ...row,
+          total_points,
+          exact_scores,
+          total_bets: Number(row.total_bets),
+          correct_results: Number(row.correct_results),
           league_id: leagueId,
           rounds_won: 0,
           rounds_won_list: [],
@@ -580,21 +587,24 @@ const dbHelpers = {
     let last_exact_scores = -1;
     return liveRankingResult.map((row, index) => {
       const roundsWonList = roundsWonMap.get(row.user_id) || [];
-      if (row.total_points !== last_total_points || row.exact_scores !== last_exact_scores) {
+      const total_points = Number(row.total_points);
+      const exact_scores = Number(row.exact_scores);
+
+      if (total_points !== last_total_points || exact_scores !== last_exact_scores) {
         rank = index + 1;
       }
-      last_total_points = row.total_points;
-      last_exact_scores = row.exact_scores;
+      last_total_points = total_points;
+      last_exact_scores = exact_scores;
       return {
         user_id: row.user_id,
         league_id: leagueId,
-        total_points: row.total_points,
-        exact_scores: row.exact_scores,
-        total_bets: row.total_bets,
-        correct_results: row.correct_results,
+        total_points,
+        exact_scores,
+        total_bets: Number(row.total_bets),
+        correct_results: Number(row.correct_results),
         rounds_won: roundsWonList.length,
         rounds_won_list: roundsWonList,
-        rounds_tied: row.rounds_tied,
+        rounds_tied: Number(row.rounds_tied || 0),
         rank: rank,
         user: {
           id: row.user_id,
