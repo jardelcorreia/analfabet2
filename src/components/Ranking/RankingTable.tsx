@@ -489,7 +489,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       </div>
 
               {/* Top 3 Podium - Desktop only */}
-      {sortedRanking.length >= 1 && !isMobile && (
+      {sortedRanking.length >= 1 && !isMobile && !sortedRanking.every(p => p.total_points === 0) && (
         <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 px-4 py-6 sm:px-6">
           {sortedRanking.every(player => player.total_points === 0) ? (
             // All zero points: neutral podium - show first 3 players
