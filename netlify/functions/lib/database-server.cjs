@@ -495,19 +495,29 @@ const dbHelpers = {
     if (round) {
       const result = await sql`
         SELECT
-          b.user_id,
+          lm.user_id,
           u.name as user_name,
           u.email as user_email,
           u.avatar as user_avatar,
-          COALESCE(SUM(b.points), 0) as total_points,
-          COALESCE(COUNT(CASE WHEN b.is_exact THEN 1 END), 0) as exact_scores,
-          COALESCE(COUNT(b.id), 0) as total_bets,
-          COALESCE(COUNT(CASE WHEN b.points > 0 THEN 1 END), 0) as correct_results
-        FROM bets b
-        INNER JOIN users u ON b.user_id = u.id
-        INNER JOIN matches m ON b.match_id = m.id
-        WHERE b.league_id = ${leagueId} AND m.round = ${round}
-        GROUP BY b.user_id, u.name, u.email, u.avatar
+          COALESCE(round_stats.total_points, 0) as total_points,
+          COALESCE(round_stats.exact_scores, 0) as exact_scores,
+          COALESCE(round_stats.total_bets, 0) as total_bets,
+          COALESCE(round_stats.correct_results, 0) as correct_results
+        FROM league_members lm
+        INNER JOIN users u ON lm.user_id = u.id
+        LEFT JOIN (
+          SELECT
+            b.user_id,
+            SUM(b.points) as total_points,
+            COUNT(CASE WHEN b.is_exact THEN 1 END) as exact_scores,
+            COUNT(b.id) as total_bets,
+            COUNT(CASE WHEN b.points > 0 THEN 1 END) as correct_results
+          FROM bets b
+          INNER JOIN matches m ON b.match_id = m.id
+          WHERE b.league_id = ${leagueId} AND m.round = ${round}
+          GROUP BY b.user_id
+        ) as round_stats ON lm.user_id = round_stats.user_id
+        WHERE lm.league_id = ${leagueId}
         ORDER BY total_points DESC, exact_scores DESC
       `;
       let rank = 1;
@@ -538,18 +548,28 @@ const dbHelpers = {
     // For 'all' rounds, we will also calculate on the fly to get live results
     const liveRankingResult = await sql`
         SELECT
-          b.user_id,
+          lm.user_id,
           u.name as user_name,
           u.email as user_email,
           u.avatar as user_avatar,
-          COALESCE(SUM(b.points), 0) as total_points,
-          COALESCE(COUNT(CASE WHEN b.is_exact THEN 1 END), 0) as exact_scores,
-          COALESCE(COUNT(b.id), 0) as total_bets,
-          COALESCE(COUNT(CASE WHEN b.points > 0 THEN 1 END), 0) as correct_results
-        FROM bets b
-        INNER JOIN users u ON b.user_id = u.id
-        WHERE b.league_id = ${leagueId}
-        GROUP BY b.user_id, u.name, u.email, u.avatar
+          COALESCE(all_stats.total_points, 0) as total_points,
+          COALESCE(all_stats.exact_scores, 0) as exact_scores,
+          COALESCE(all_stats.total_bets, 0) as total_bets,
+          COALESCE(all_stats.correct_results, 0) as correct_results
+        FROM league_members lm
+        INNER JOIN users u ON lm.user_id = u.id
+        LEFT JOIN (
+          SELECT
+            b.user_id,
+            SUM(b.points) as total_points,
+            COUNT(CASE WHEN b.is_exact THEN 1 END) as exact_scores,
+            COUNT(b.id) as total_bets,
+            COUNT(CASE WHEN b.points > 0 THEN 1 END) as correct_results
+          FROM bets b
+          WHERE b.league_id = ${leagueId}
+          GROUP BY b.user_id
+        ) as all_stats ON lm.user_id = all_stats.user_id
+        WHERE lm.league_id = ${leagueId}
         ORDER BY total_points DESC NULLS LAST, exact_scores DESC
       `;
 
