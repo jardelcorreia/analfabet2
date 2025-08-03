@@ -711,4 +711,4 @@ const dbHelpers = {
   }
 };
 
-module.exports = { query, dbHelpers };
+module.exports = { dbHelpers };
