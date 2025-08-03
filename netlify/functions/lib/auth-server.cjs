@@ -210,6 +210,7 @@ const getUserById = async (id) => {
 // Função para atualizar dados do usuário
 const updateUser = async (id, updates) => {
   try {
+    console.log(`[auth-server] Updating user ${id} with data:`, updates);
     // Validar atualizações
     if (updates.email && !isEmailFormat(updates.email)) {
       throw new Error('Formato de email inválido');
@@ -243,12 +244,15 @@ const updateUser = async (id, updates) => {
       updates.password = await hashPassword(updates.password);
     }
 
+    console.log(`[auth-server] Calling dbHelpers.updateUser for user ${id}`);
     const user = await dbHelpers.updateUser(id, updates);
 
     if (!user) {
+      console.error(`[auth-server] dbHelpers.updateUser returned null for user ${id}`);
       return null;
     }
 
+    console.log(`[auth-server] Successfully updated user ${id}`);
     return {
       id: user.id,
       email: user.email,
@@ -256,7 +260,7 @@ const updateUser = async (id, updates) => {
       created_at: user.created_at
     };
   } catch (error) {
-    console.error('Erro ao atualizar usuário:', error);
+    console.error(`[auth-server] Error in updateUser for user ${id}:`, error);
     throw error;
   }
 };
