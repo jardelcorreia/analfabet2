@@ -4,8 +4,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthForm } from './components/Auth/AuthForm';
 import { EmailConfirmed } from './components/Auth/EmailConfirmed';
 import { Dashboard } from './components/Dashboard/Dashboard';
+import { LandingPage } from './components/Landing/LandingPage';
 import { useAuth } from './hooks/useAuth';
-import { isSessionExpired, removeAuthToken } from './lib/storage';
+import { isSessionExpired } from './lib/storage';
 
 function App() {
   const { user, loading, signIn, signUp, signOut } = useAuth();
@@ -50,7 +51,7 @@ function App() {
     <Routes>
       <Route path="/login" element={!user ? <AuthForm onSignIn={signIn} onSignUp={signUp} /> : <Navigate to="/" />} />
       <Route path="/email-confirmed" element={<EmailConfirmed />} />
-      <Route path="/" element={user ? <Dashboard user={user} onSignOut={signOut} /> : <Navigate to="/login" />} />
+      <Route path="/" element={user ? <Dashboard user={user} onSignOut={signOut} /> : <LandingPage />} />
     </Routes>
   );
 }

@@ -17,6 +17,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
+  const heroImageUrl = 'https://images.unsplash.com/photo-1473976345543-9ffc928e648d';
 
   const isEmailFormat = (input: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -118,8 +119,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
 
   if (signUpSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-yellow-400 dark:from-gray-800 dark:via-gray-900 dark:to-black flex items-center justify-center p-4">
-        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 w-full max-w-sm text-center">
+      <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4" style={{ backgroundImage: `url(${heroImageUrl})` }}>
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 w-full max-w-sm text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-4">
             <Mail className="w-8 h-8 text-green-600 dark:text-green-400" />
           </div>
@@ -133,8 +135,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-yellow-400 dark:from-gray-800 dark:via-gray-900 dark:to-black flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 w-full max-w-sm">
+    <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4" style={{ backgroundImage: `url(${heroImageUrl})` }}>
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 w-full max-w-sm">
 
         {/* Header */}
         <div className="text-center mb-8">
