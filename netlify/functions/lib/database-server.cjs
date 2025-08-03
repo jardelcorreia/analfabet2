@@ -45,31 +45,17 @@ const dbHelpers = {
     return result[0];
   },
 
-  async updateUser(id, updates) {
+  async updateUsername(id, name) {
     try {
-      const { name, email, password, avatar } = updates;
-      const fieldsToUpdate = {};
-
-      if (name) fieldsToUpdate.name = name;
-      if (email) fieldsToUpdate.email = email;
-      if (password) fieldsToUpdate.password_hash = password;
-      if (avatar) fieldsToUpdate.avatar = avatar;
-
-      if (Object.keys(fieldsToUpdate).length === 0) return null;
-
-      const fields = Object.keys(fieldsToUpdate).map(key => sql`${sql.unsafe(key)} = ${fieldsToUpdate[key]}`);
-
-      const query = sql`
+      const result = await sql`
         UPDATE users
-        SET ${sql.join(fields, sql`, `)}, updated_at = CURRENT_TIMESTAMP
+        SET name = ${name}, updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
         RETURNING id, email, name, created_at, avatar, email_confirmed
       `;
-
-      const result = await query;
       return result[0];
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error('Error updating username:', error);
       throw error;
     }
   },

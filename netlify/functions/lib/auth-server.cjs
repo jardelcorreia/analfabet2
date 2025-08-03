@@ -211,54 +211,33 @@ const getUserById = async (id) => {
 const updateUser = async (id, updates) => {
   try {
     console.log(`[auth-server] Updating user ${id} with data:`, updates);
-    // Validar atualizações
-    if (updates.email && !isEmailFormat(updates.email)) {
-      throw new Error('Formato de email inválido');
-    }
-
-    if (updates.name && !isValidUsername(updates.name)) {
-      throw new Error('Nome de usuário inválido');
-    }
-
-    if (updates.password && updates.password.length < 6) {
-      throw new Error('Senha deve ter pelo menos 6 caracteres');
-    }
-
-    // Verificar conflitos
-    if (updates.email) {
-      const existingUser = await dbHelpers.getUserByEmail(updates.email);
-      if (existingUser && existingUser.id !== id) {
-        throw new Error('Este email já está em uso');
-      }
-    }
 
     if (updates.name) {
+      if (!isValidUsername(updates.name)) {
+        throw new Error('Nome de usuário inválido');
+      }
       const existingUser = await dbHelpers.getUserByName(updates.name);
       if (existingUser && existingUser.id !== id) {
         throw new Error('Este nome de usuário já está em uso');
       }
+      console.log(`[auth-server] Calling dbHelpers.updateUsername for user ${id}`);
+      const user = await dbHelpers.updateUsername(id, updates.name);
+      if (!user) {
+        console.error(`[auth-server] dbHelpers.updateUsername returned null for user ${id}`);
+        return null;
+      }
+      console.log(`[auth-server] Successfully updated user ${id}`);
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        created_at: user.created_at
+      };
     }
 
-    // Hash da nova senha se fornecida
-    if (updates.password) {
-      updates.password = await hashPassword(updates.password);
-    }
+    // Add other update types here later if needed
 
-    console.log(`[auth-server] Calling dbHelpers.updateUser for user ${id}`);
-    const user = await dbHelpers.updateUser(id, updates);
-
-    if (!user) {
-      console.error(`[auth-server] dbHelpers.updateUser returned null for user ${id}`);
-      return null;
-    }
-
-    console.log(`[auth-server] Successfully updated user ${id}`);
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      created_at: user.created_at
-    };
+    return null; // No update was performed
   } catch (error) {
     console.error(`[auth-server] Error in updateUser for user ${id}:`, error);
     throw error;
