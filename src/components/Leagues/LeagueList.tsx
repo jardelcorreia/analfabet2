@@ -1,23 +1,31 @@
 import React, { useState } from 'react';
-import { Plus, Users, Copy, Trophy, Calendar, Check, X } from 'lucide-react';
+import { Plus, Users, Copy, Trophy, Calendar, Check, X, Pencil } from 'lucide-react';
 import { League } from '../../types';
+import { AuthUser } from '../../lib/auth';
+import { EditLeagueModal } from './EditLeagueModal';
+
+import { getAuthToken } from '../../lib/storage';
 
 interface LeagueListProps {
   leagues: League[];
+  user: AuthUser;
   onCreateLeague: (name: string, description?: string) => Promise<void>;
   onJoinLeague: (code: string) => Promise<void>;
   onSelectLeague: (league: League) => void;
   onShowLeagueMembers: (league: League) => void;
   onShowLeagueBets: (league: League) => void;
+  onLeagueUpdate: () => void;
 }
 
 export const LeagueList: React.FC<LeagueListProps> = ({
   leagues,
+  user,
   onCreateLeague,
   onJoinLeague,
   onSelectLeague,
   onShowLeagueMembers,
-  onShowLeagueBets
+  onShowLeagueBets,
+  onLeagueUpdate
 }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showJoinForm, setShowJoinForm] = useState(false);
@@ -26,6 +34,8 @@ export const LeagueList: React.FC<LeagueListProps> = ({
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [editingLeague, setEditingLeague] = useState<League | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +70,36 @@ export const LeagueList: React.FC<LeagueListProps> = ({
     navigator.clipboard.writeText(leagueCode);
     setCopiedCode(leagueCode);
     setTimeout(() => setCopiedCode(null), 2000);
+  };
+
+  const handleEditLeague = (league: League) => {
+    setEditingLeague(league);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveLeague = async (leagueId: string, name: string, description: string) => {
+    try {
+      const response = await fetch('/.netlify/functions/update-league', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'token': getAuthToken() || '',
+        },
+        body: JSON.stringify({ leagueId, name, description }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update league');
+      }
+
+      // Refresh the leagues list
+      onLeagueUpdate();
+    } catch (error) {
+      console.error('Error updating league:', error);
+      // Here you could add some user-facing error message
+    }
   };
 
   return (
@@ -218,6 +258,17 @@ export const LeagueList: React.FC<LeagueListProps> = ({
                       <Copy className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                     )}
                   </button>
+                  {league.created_by === user.id && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditLeague(league);
+                      }}
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full transition-colors"
+                    >
+                      <Pencil className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -265,6 +316,13 @@ export const LeagueList: React.FC<LeagueListProps> = ({
           </div>
         ))}
       </div>
+
+      <EditLeagueModal
+        league={editingLeague}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSave={handleSaveLeague}
+      />
 
       {leagues.length === 0 && (
         <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700">

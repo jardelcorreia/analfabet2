@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { League } from '../types';
 import { dbHelpers } from '../lib/database';
 
@@ -6,22 +6,23 @@ export const useLeagues = (userId?: string) => {
   const [leagues, setLeagues] = useState<League[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchLeagues = async () => {
-      if (!userId) return;
+  const fetchLeagues = useCallback(async () => {
+    if (!userId) return;
 
-      try {
-        const data = await dbHelpers.getUserLeagues(userId);
-        setLeagues(data);
-      } catch (error) {
-        console.error('Error fetching leagues:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLeagues();
+    setLoading(true);
+    try {
+      const data = await dbHelpers.getUserLeagues(userId);
+      setLeagues(data);
+    } catch (error) {
+      console.error('Error fetching leagues:', error);
+    } finally {
+      setLoading(false);
+    }
   }, [userId]);
+
+  useEffect(() => {
+    fetchLeagues();
+  }, [fetchLeagues]);
 
   const createLeague = async (name: string, description?: string) => {
     if (!userId) return;
@@ -56,14 +57,14 @@ export const useLeagues = (userId?: string) => {
     await dbHelpers.addLeagueMember(league.id, userId);
 
     // Fetch updated leagues
-    const data = await dbHelpers.getUserLeagues(userId);
-    setLeagues(data);
+    await fetchLeagues();
   };
 
   return {
     leagues,
     loading,
     createLeague,
-    joinLeague
+    joinLeague,
+    refreshLeagues: fetchLeagues,
   };
 };

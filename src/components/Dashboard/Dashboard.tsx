@@ -8,6 +8,7 @@ import { LeagueMembers } from '../Leagues/LeagueMembers';
 import { MatchList } from '../Matches/MatchList';
 import { RankingTable } from '../Ranking/RankingTable';
 import { LeagueBets } from '../Bets/LeagueBets';
+import { Profile } from '../Profile/Profile';
 import { useLeagues } from '../../hooks/useLeagues';
 import { useRanking } from '../../hooks/useRanking';
 import { useMatches } from '../../hooks/useMatches';
@@ -22,7 +23,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
   const [selectedRound, setSelectedRound] = useState<number | 'all' | undefined>(undefined);
   
-  const { leagues, loading: leaguesLoading, createLeague, joinLeague } = useLeagues(user.id);
+  const { leagues, loading: leaguesLoading, createLeague, joinLeague, refreshLeagues } = useLeagues(user.id);
   const { ranking, loading: rankingLoading, displayedRound: rankingDisplayedRound, refreshRanking } = useRanking(selectedLeague?.id || '', selectedRound);
   const { matches, loading: matchesLoading, error: matchesError, displayedRound: matchesDisplayedRound, refreshMatches } = useMatches(selectedRound);
 
@@ -52,6 +53,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
     }
   };
 
+  const handleNavigateToProfile = () => {
+    setActiveTab('profile');
+    setSelectedLeague(null);
+  };
+
   const handleSelectLeague = (league: League) => {
     setSelectedLeague(league);
     setActiveTab('matches');
@@ -74,11 +80,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
           <div className="animate-fadeIn">
             <LeagueList
               leagues={leagues}
+              user={user}
               onCreateLeague={createLeague}
               onJoinLeague={joinLeague}
               onSelectLeague={handleSelectLeague}
               onShowLeagueMembers={handleShowLeagueMembers}
               onShowLeagueBets={handleShowLeagueBets}
+              onLeagueUpdate={refreshLeagues}
             />
           </div>
         );
@@ -187,6 +195,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
             </div>
           </div>
         );
+      case 'profile':
+        return <Profile user={user} />;
       default:
         return null;
     }
@@ -197,6 +207,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
       <Header
         userName={user.name || user.email}
         onSignOut={onSignOut}
+        onNavigateToProfile={handleNavigateToProfile}
       />
       <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
       
@@ -220,7 +231,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
                 </div>
               </div>
               <button
-                onClick={() => setSelectedLeague(null)}
+                onClick={() => {
+                  setSelectedLeague(null);
+                  setActiveTab('leagues');
+                }}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
