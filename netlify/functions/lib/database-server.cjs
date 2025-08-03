@@ -57,7 +57,7 @@ const dbHelpers = {
 
       if (Object.keys(fieldsToUpdate).length === 0) return null;
 
-      const fields = Object.keys(fieldsToUpdate).map(key => sql`${sql.ident(key)} = ${fieldsToUpdate[key]}`);
+      const fields = Object.keys(fieldsToUpdate).map(key => sql`${sql.unsafe(key)} = ${fieldsToUpdate[key]}`);
 
       const query = sql`
         UPDATE users
@@ -166,7 +166,7 @@ const dbHelpers = {
   },
 
   async updateLeague(id, updates) {
-    const fields = Object.keys(updates).map(key => sql`${sql(key)} = ${updates[key]}`);
+    const fields = Object.keys(updates).map(key => sql`${sql.unsafe(key)} = ${updates[key]}`);
 
     if (fields.length === 0) return null;
 
