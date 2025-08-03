@@ -269,7 +269,7 @@ const changePassword = async (id, currentPassword, newPassword) => {
     const hashedNewPassword = await hashPassword(newPassword);
 
     // Atualizar senha
-    await dbHelpers.updateUser(id, { password: hashedNewPassword });
+    await dbHelpers.updatePassword(id, hashedNewPassword);
 
     return true;
   } catch (error) {

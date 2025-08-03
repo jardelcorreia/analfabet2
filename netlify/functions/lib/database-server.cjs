@@ -60,6 +60,21 @@ const dbHelpers = {
     }
   },
 
+  async updatePassword(id, passwordHash) {
+    try {
+      const result = await sql`
+        UPDATE users
+        SET password_hash = ${passwordHash}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+        RETURNING id, email, name, created_at, avatar, email_confirmed
+      `;
+      return result[0];
+    } catch (error) {
+      console.error('Error updating password:', error);
+      throw error;
+    }
+  },
+
   // Specific function for email confirmation
   async confirmUserEmail(userId) {
     try {
