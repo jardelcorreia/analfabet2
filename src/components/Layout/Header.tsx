@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, User, LogOut, Sun, Moon, Settings, ChevronDown } from 'lucide-react';
+import { Trophy, User, LogOut, Sun, Moon, ChevronDown } from 'lucide-react';
 import { extendSession, getRememberMe } from '../../lib/storage';
 
 interface HeaderProps {
@@ -111,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({ userName, onSignOut, onNavigateT
                     }}
                     className="w-full text-left flex items-center space-x-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    <Settings className="w-4 h-4" />
+                    <User className="w-4 h-4" />
                     <span>Perfil</span>
                   </button>
                   <button
