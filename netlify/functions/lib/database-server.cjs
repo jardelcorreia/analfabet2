@@ -8,16 +8,6 @@ if (!DATABASE_URL) {
 
 const sql = neon(DATABASE_URL);
 
-const query = async (text, params) => {
-  try {
-    const result = await sql.query(text, params || []);
-    return { rows: result };
-  } catch (error) {
-    console.error('Database query error:', error);
-    throw error;
-  }
-};
-
 // Helper functions for common database operations
 const dbHelpers = {
   // Users - Auth Functions
