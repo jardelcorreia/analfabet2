@@ -56,51 +56,30 @@ const dbHelpers = {
   },
 
   async updateUser(id, updates) {
-    // This function is deprecated and should not be used for email confirmation.
-    // It is kept for other update operations but should be refactored.
     try {
-      if (Object.keys(updates).length === 0) return null;
+      const { name, email, password, avatar } = updates;
+      const fieldsToUpdate = {};
 
-      const updateFields = [];
-      const values = [];
+      if (name) fieldsToUpdate.name = name;
+      if (email) fieldsToUpdate.email = email;
+      if (password) fieldsToUpdate.password_hash = password;
+      if (avatar) fieldsToUpdate.avatar = avatar;
 
-      // Explicitly handle each updatable field
-      if (updates.email !== undefined) {
-        updateFields.push(`email = $${values.length + 1}`);
-        values.push(updates.email);
-      }
-      if (updates.password !== undefined) {
-        updateFields.push(`password_hash = $${values.length + 1}`);
-        values.push(updates.password);
-      }
-      if (updates.name !== undefined) {
-        updateFields.push(`name = $${values.length + 1}`);
-        values.push(updates.name);
-      }
-      if (updates.avatar !== undefined) {
-        updateFields.push(`avatar = $${values.length + 1}`);
-        values.push(updates.avatar);
-      }
+      if (Object.keys(fieldsToUpdate).length === 0) return null;
 
-      if (updateFields.length === 0) return null;
+      const fields = Object.keys(fieldsToUpdate).map(key => sql`${sql(key)} = ${fieldsToUpdate[key]}`);
 
-      updateFields.push('updated_at = CURRENT_TIMESTAMP');
-      values.push(id);
-
-      const query = `
+      const query = sql`
         UPDATE users
-        SET ${updateFields.join(', ')}
-        WHERE id = $${values.length}
+        SET ${sql.join(fields, sql`, `)}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
         RETURNING id, email, name, created_at, avatar, email_confirmed
       `;
 
-      console.log('Executing deprecated update query:', query);
-      console.log('With values:', values);
-
-      const result = await sql.query(query, values);
-      return result.rows[0];
+      const result = await query;
+      return result[0];
     } catch (error) {
-      console.error('Error updating user with deprecated function:', error);
+      console.error('Error updating user:', error);
       throw error;
     }
   },
