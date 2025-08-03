@@ -32,7 +32,7 @@ exports.handler = async (event, context) => {
     }
 
     // Proceed with the update
-    const updatedLeague = await dbHelpers.updateLeague(leagueId, { name, description });
+    const updatedLeague = await dbHelpers.updateLeagueDetails(leagueId, name, description);
 
     if (!updatedLeague) {
       return { statusCode: 500, body: 'Failed to update league' };

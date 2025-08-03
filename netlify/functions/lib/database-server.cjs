@@ -151,20 +151,19 @@ const dbHelpers = {
     return result[0];
   },
 
-  async updateLeague(id, updates) {
-    const fields = Object.keys(updates).map(key => sql`${sql.unsafe(key)} = ${updates[key]}`);
-
-    if (fields.length === 0) return null;
-
-    const query = sql`
-      UPDATE leagues
-      SET ${sql.join(fields, sql`, `)}, updated_at = CURRENT_TIMESTAMP
-      WHERE id = ${id}
-      RETURNING *
-    `;
-
-    const result = await query;
-    return result[0];
+  async updateLeagueDetails(id, name, description) {
+    try {
+      const result = await sql`
+        UPDATE leagues
+        SET name = ${name}, description = ${description}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+        RETURNING *
+      `;
+      return result[0];
+    } catch (error) {
+      console.error('Error updating league details:', error);
+      throw error;
+    }
   },
 
   async deleteLeague(id) {
