@@ -57,7 +57,7 @@ const dbHelpers = {
 
       if (Object.keys(fieldsToUpdate).length === 0) return null;
 
-      const fields = Object.keys(fieldsToUpdate).map(key => sql`${sql(key)} = ${fieldsToUpdate[key]}`);
+      const fields = Object.keys(fieldsToUpdate).map(key => sql`${sql.ident(key)} = ${fieldsToUpdate[key]}`);
 
       const query = sql`
         UPDATE users
