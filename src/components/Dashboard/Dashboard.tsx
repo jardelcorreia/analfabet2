@@ -58,6 +58,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
     setSelectedLeague(null);
   };
 
+  const handleGoHome = () => {
+    setActiveTab('leagues');
+    setSelectedLeague(null);
+  };
+
   const handleSelectLeague = (league: League) => {
     setSelectedLeague(league);
     setActiveTab('matches');
@@ -208,6 +213,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
         userName={user.name || user.email}
         onSignOut={onSignOut}
         onNavigateToProfile={handleNavigateToProfile}
+        onGoHome={handleGoHome}
       />
       <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
       

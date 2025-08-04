@@ -7,9 +7,10 @@ interface HeaderProps {
   userName: string;
   onSignOut: () => void;
   onNavigateToProfile: () => void;
+  onGoHome: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ userName, onSignOut, onNavigateToProfile }) => {
+export const Header: React.FC<HeaderProps> = ({ userName, onSignOut, onNavigateToProfile, onGoHome }) => {
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem('theme') === 'dark'
   );
@@ -64,10 +65,10 @@ export const Header: React.FC<HeaderProps> = ({ userName, onSignOut, onNavigateT
     <header className="bg-gradient-to-r from-green-600 to-green-700 dark:from-gray-800 dark:to-gray-900 text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2 cursor-pointer">
+          <button onClick={onGoHome} className="flex items-center space-x-2 cursor-pointer">
             <Trophy className="w-8 h-8" />
             <h1 className="text-2xl font-bold">AnalfaBet</h1>
-          </Link>
+          </button>
 
           <div className="flex items-center space-x-2">
             <button
