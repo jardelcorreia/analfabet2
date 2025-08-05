@@ -202,7 +202,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               {/* Rounds Won - Mobile - Apenas visível em 'todas as rodadas' */}
               {selectedRound === 'all' && (
                 <div className="flex items-center space-x-1">
-                  <Crown className="w-3 h-3 text-secondary" />
+                  <Crown className="w-3 h-3 text-secondary-foreground" />
                   <span className="text-muted-foreground">{userStat.rounds_won || 0}</span>
                   <span className="text-muted-foreground">/ {userStat.rounds_tied || 0}</span>
                 </div>
@@ -218,7 +218,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             {selectedRound === 'all' && userStat.rounds_won > 0 && (
               <button
                 onClick={() => toggleRowExpansion(userStat.user_id)}
-                className="flex items-center space-x-1 text-secondary hover:text-secondary/80 transition-colors p-1"
+                className="flex items-center space-x-1 text-secondary-foreground hover:text-secondary-foreground/80 transition-colors p-1"
               >
                 <span className="text-xs">Detalhes</span>
                 {expandedRows.has(userStat.user_id) ? (
@@ -233,7 +233,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
           {/* Expanded Details - Mobile - Apenas visível em 'todas as rodadas' */}
           {selectedRound === 'all' && expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
             <div className="mt-3 p-3 bg-secondary/10 rounded-lg">
-              <div className="text-xs font-medium text-secondary mb-2">
+              <div className="text-xs font-medium text-secondary-foreground mb-2">
                 Rodadas vencidas:
               </div>
               <div className="grid grid-cols-6 gap-1">
@@ -243,13 +243,13 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                       key={round}
                       className="flex items-center justify-center bg-secondary/20 rounded px-1 py-0.5"
                     >
-                      <span className="text-xs font-medium text-secondary">
+                      <span className="text-xs font-medium text-secondary-foreground">
                         R{round}
                       </span>
                     </div>
                   ))}
                 {userStat.rounds_won_list && userStat.rounds_won_list.length > 12 && (
-                  <div className="flex items-center justify-center text-xs text-secondary col-span-2">
+                  <div className="flex items-center justify-center text-xs text-secondary-foreground col-span-2">
                     +{userStat.rounds_won_list.length - 12} mais
                   </div>
                 )}
@@ -329,15 +329,15 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                   }`}
                   onClick={() => userStat.rounds_won > 0 && toggleRowExpansion(userStat.user_id)} // Só permite clique se houver rodadas vencidas
                 >
-                  <Crown className="w-4 h-4 text-secondary" />
-                  <span className="text-sm font-medium text-secondary">
+                  <Crown className="w-4 h-4 text-secondary-foreground" />
+                  <span className="text-sm font-medium text-secondary-foreground">
                     {userStat.rounds_won || 0} / {userStat.rounds_tied || 0}
                   </span>
                   {userStat.rounds_won > 0 && (
                     expandedRows.has(userStat.user_id) ? (
-                      <ChevronUp className="w-3 h-3 text-secondary" />
+                      <ChevronUp className="w-3 h-3 text-secondary-foreground" />
                     ) : (
-                      <ChevronDown className="w-3 h-3 text-secondary" />
+                      <ChevronDown className="w-3 h-3 text-secondary-foreground" />
                     )
                   )}
                 </div>
@@ -361,8 +361,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             <td colSpan={selectedRound === 'all' ? 7 : 6} className="px-4 sm:px-6 py-4">
               <div className="flex flex-col space-y-3">
                 <div className="flex items-center space-x-2">
-                  <Crown className="w-5 h-5 text-secondary" />
-                  <span className="font-semibold text-secondary">
+                  <Crown className="w-5 h-5 text-secondary-foreground" />
+                  <span className="font-semibold text-secondary-foreground">
                     Rodadas vencidas por {userStat.user.name}:
                   </span>
                 </div>
@@ -374,13 +374,13 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         className="flex items-center justify-center bg-secondary/20 hover:bg-secondary/30 rounded-lg px-3 py-2 transition-colors cursor-pointer"
                         title={`Rodada ${round} - Clique para ver detalhes`}
                       >
-                        <span className="text-sm font-medium text-secondary">
+                        <span className="text-sm font-medium text-secondary-foreground">
                           R{round}
                         </span>
                       </div>
                     ))}
                 </div>
-                <div className="text-xs text-secondary flex items-center space-x-1">
+                <div className="text-xs text-secondary-foreground flex items-center space-x-1">
                   <Info className="w-4 h-4" />
                   <span>
                     Total: {userStat.rounds_won} rodada{userStat.rounds_won !== 1 ? 's' : ''} vencida{userStat.rounds_won !== 1 ? 's' : ''}
