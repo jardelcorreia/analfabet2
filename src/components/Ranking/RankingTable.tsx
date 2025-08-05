@@ -59,18 +59,16 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     return a.user.name.localeCompare(b.user.name);
   });
 
+  let rank = 1;
   for (let i = 0; i < sortedRanking.length; i++) {
-    if (i === 0) {
-      sortedRanking[i].rank = 1;
-    } else {
+    if (i > 0) {
       const prev = sortedRanking[i - 1];
       const curr = sortedRanking[i];
-      if (curr.total_points === prev.total_points && curr.exact_scores === prev.exact_scores) {
-        curr.rank = prev.rank;
-      } else {
-        curr.rank = i + 1;
+      if (curr.total_points !== prev.total_points || curr.exact_scores !== prev.exact_scores) {
+        rank++;
       }
     }
+    sortedRanking[i].rank = rank;
   }
 
   // --- Update getMedalIcon to use rank ---
