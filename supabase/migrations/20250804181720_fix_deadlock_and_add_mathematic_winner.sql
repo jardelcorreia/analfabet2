@@ -1,8 +1,45 @@
--- This migration enhances the round winner calculation to include "mathematic" winners
--- for ongoing rounds, correctly handling in-progress matches. It also introduces a
--- function to check if a round's outcome is mathematically defined.
+-- This migration fixes a deadlock issue by decoupling the user_stats update from the
+-- round_winners calculation. It also enhances the round winner calculation to include
+-- "mathematic" winners for ongoing rounds, correctly handling in-progress matches.
 
--- Step 1: Create a function to check if a round is mathematically defined.
+-- Step 1: Update the trigger function to only update user_stats, removing the
+-- expensive round winner calculation to prevent deadlocks.
+CREATE OR REPLACE FUNCTION update_user_stats_from_bet()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update basic stats for the user who placed the bet.
+    INSERT INTO user_stats (user_id, league_id, total_points, exact_scores, total_bets, correct_results)
+    SELECT
+        NEW.user_id,
+        NEW.league_id,
+        COALESCE(SUM(b.points), 0) as total_points,
+        COUNT(CASE WHEN b.is_exact = true THEN 1 END) as exact_scores,
+        COUNT(*) as total_bets,
+        COUNT(CASE WHEN b.points > 0 THEN 1 END) as correct_results
+    FROM bets b
+    WHERE b.user_id = NEW.user_id AND b.league_id = NEW.league_id
+    GROUP BY b.user_id, b.league_id
+    ON CONFLICT (user_id, league_id)
+    DO UPDATE SET
+        total_points = EXCLUDED.total_points,
+        exact_scores = EXCLUDED.exact_scores,
+        total_bets = EXCLUDED.total_bets,
+        correct_results = EXCLUDED.correct_results,
+        updated_at = NOW();
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Update the trigger to use the new, more focused function.
+DROP TRIGGER IF EXISTS trigger_update_user_stats ON bets;
+CREATE TRIGGER trigger_update_user_stats
+    AFTER INSERT OR UPDATE ON bets
+    FOR EACH ROW
+    EXECUTE FUNCTION update_user_stats_from_bet();
+
+
+-- Step 2: Create a function to check if a round is mathematically defined.
 CREATE OR REPLACE FUNCTION is_round_mathematically_defined(p_league_id UUID, p_round_number INTEGER)
 RETURNS BOOLEAN AS $$
 DECLARE
@@ -28,7 +65,6 @@ BEGIN
     END IF;
 
     -- Check if a winner has already been recorded for this round.
-    -- The existence of a winner implies they were a mathematic winner.
     SELECT EXISTS (
         SELECT 1
         FROM round_winners
@@ -40,7 +76,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Step 2: Update the main calculation function to find mathematic winners robustly.
+-- Step 3: Update the main calculation function to find mathematic winners robustly.
+-- This function will now be called from the API, not from a trigger.
 CREATE OR REPLACE FUNCTION calculate_detailed_rounds_won_for_league(league_id_param UUID)
 RETURNS void AS $$
 DECLARE
@@ -91,12 +128,10 @@ BEGIN
         ORDER BY SUM(b.points) DESC
         LIMIT 1;
 
-        -- If there's no leader, skip
         IF leader_user_id IS NULL THEN
             CONTINUE;
         END IF;
 
-        -- Check if the leader is unbeatable
         is_unbeatable := TRUE;
         FOR winner_record IN
             SELECT b.user_id
@@ -107,7 +142,6 @@ BEGIN
               AND b.user_id != leader_user_id
             GROUP BY b.user_id
         LOOP
-            -- Calculate competitor's locked-in score
             SELECT COALESCE(SUM(b.points), 0) INTO competitor_locked_in_score
             FROM bets b
             JOIN matches m ON b.match_id = m.id
@@ -122,7 +156,6 @@ BEGIN
             END IF;
         END LOOP;
 
-        -- If leader is unbeatable, insert them as a winner
         IF is_unbeatable THEN
             INSERT INTO round_winners (user_id, league_id, round_number, points_in_round)
             VALUES (leader_user_id, league_id_param, ongoing_round_record.round, leader_locked_in_score)
@@ -131,7 +164,7 @@ BEGIN
 
     END LOOP;
 
-    -- Part 2: Calculate winners for FINISHED rounds (the original logic)
+    -- Part 2: Calculate winners for FINISHED rounds
     FOR round_record IN
         SELECT DISTINCT m.round
         FROM matches m
@@ -140,7 +173,6 @@ BEGIN
           AND EXISTS (SELECT 1 FROM bets b WHERE b.league_id = league_id_param AND b.match_id = m.id)
         ORDER BY m.round
     LOOP
-        -- Get the maximum points for this round
         SELECT MAX(round_points.total_points) INTO max_points
         FROM (
             SELECT SUM(b2.points) as total_points
@@ -151,7 +183,6 @@ BEGIN
             GROUP BY b2.user_id
         ) round_points;
 
-        -- Find all players who achieved the maximum points
         FOR winner_record IN
             SELECT b.user_id, SUM(b.points) as total_points
             FROM bets b
@@ -161,7 +192,6 @@ BEGIN
             GROUP BY b.user_id
             HAVING SUM(b.points) = max_points AND max_points > 0
         LOOP
-            -- Insert round winner record
             INSERT INTO round_winners (user_id, league_id, round_number, points_in_round)
             VALUES (winner_record.user_id, league_id_param, round_record.round, winner_record.total_points)
             ON CONFLICT (user_id, league_id, round_number) DO UPDATE
