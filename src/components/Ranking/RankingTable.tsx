@@ -77,7 +77,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
     if (allPlayersHaveZeroPoints) {
       return (
-        <div className="w-8 h-8 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center border-2 border-border">
+        <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center border-2 border-border">
           <span className="text-sm font-bold text-muted-foreground">{rank}</span>
         </div>
       );
@@ -91,29 +91,29 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     if (rank === 1) {
       return (
         <div className="relative">
-          <div className="w-8 h-8 bg-gradient-to-r from-warning to-warning/80 rounded-full flex items-center justify-center shadow-lg">
-            <Crown className="w-5 h-5 text-warning-foreground" />
+          <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
+            <Crown className="w-5 h-5 text-white" />
           </div>
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-warning/50 rounded-full animate-pulse"></div>
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-pulse"></div>
         </div>
       );
     }
     if (rank === silverRank) {
       return (
-        <div className="w-8 h-8 bg-gradient-to-r from-secondary to-secondary/80 rounded-full flex items-center justify-center shadow-md">
-          <Medal className="w-5 h-5 text-secondary-foreground" />
+        <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center shadow-md">
+          <Medal className="w-5 h-5 text-white" />
         </div>
       );
     }
     if (rank === bronzeRank) {
       return (
-        <div className="w-8 h-8 bg-gradient-to-r from-warning to-warning/80 rounded-full flex items-center justify-center shadow-md">
-          <Medal className="w-5 h-5 text-warning-foreground" />
+        <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center shadow-md">
+          <Medal className="w-5 h-5 text-white" />
         </div>
       );
     }
     return (
-      <div className="w-8 h-8 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center border-2 border-border">
+      <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center border-2 border-border">
         <span className="text-sm font-bold text-muted-foreground">{rank}</span>
       </div>
     );
@@ -124,11 +124,11 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     const isTopThree = position <= 3;
 
     if (isCurrentUser) {
-      return 'bg-gradient-to-r from-primary/10 to-secondary/10 border-l-4 border-primary shadow-sm';
+      return 'bg-primary/10 border-l-4 border-primary shadow-sm';
     }
 
     if (isTopThree) {
-      return 'bg-gradient-to-r from-warning/10 to-warning/20 hover:from-warning/20 hover:to-warning/30 transition-all duration-200';
+      return 'bg-yellow-400/10 hover:bg-yellow-400/20 transition-all duration-200';
     }
 
     return 'bg-card hover:bg-muted transition-all duration-200';
@@ -141,9 +141,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   };
 
   const getPositionBadge = (position: number) => {
-    if (position === 1) return 'bg-gradient-to-r from-warning to-warning/80 text-warning-foreground';
-    if (position === 2) return 'bg-gradient-to-r from-secondary to-secondary/80 text-secondary-foreground';
-    if (position === 3) return 'bg-gradient-to-r from-warning to-warning/80 text-warning-foreground';
+    if (position === 1) return 'bg-yellow-400 text-white';
+    if (position === 2) return 'bg-gray-400 text-white';
+    if (position === 3) return 'bg-yellow-600 text-white';
     return 'bg-muted text-muted-foreground';
   };
 
@@ -161,7 +161,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             {/* Left: Position, Avatar, Name */}
             <div className="flex items-center space-x-3 flex-1 min-w-0">
               {getMedalIcon(position)}
-              <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-primary-foreground font-bold text-xs shadow-md flex-shrink-0">
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold text-xs shadow-md flex-shrink-0">
                 {userStat.user.name.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
@@ -277,7 +277,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
           </td>
           <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
             <div className="flex items-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-primary-foreground font-bold shadow-md">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold shadow-md">
                 {userStat.user.name.charAt(0).toUpperCase()}
               </div>
               <div className="ml-3 sm:ml-4">
@@ -412,17 +412,17 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       {
         medal: 'gold',
         players: goldPlayers,
-        medalClass: 'bg-gradient-to-r from-warning to-warning/80'
+        medalClass: 'bg-yellow-400'
       },
       {
         medal: 'silver',
         players: silverPlayers,
-        medalClass: 'bg-gradient-to-r from-secondary to-secondary/80'
+        medalClass: 'bg-gray-400'
       },
       {
         medal: 'bronze',
         players: bronzePlayers,
-        medalClass: 'bg-gradient-to-r from-warning to-warning/80'
+        medalClass: 'bg-yellow-600'
       }
     ];
   }
@@ -498,7 +498,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               {/* 2nd Place (Left) */}
               {sortedRanking[1] && (
                 <div key={sortedRanking[1].user_id} className="flex flex-col items-center">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-muted rounded-full flex items-center justify-center mb-2 shadow-lg">
                     <span className="text-base sm:text-lg font-bold text-muted-foreground">
                       {sortedRanking[1].user.name.charAt(0).toUpperCase()}
                     </span>
@@ -507,7 +507,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     <p className="font-semibold text-xs sm:text-sm text-foreground truncate max-w-[80px]">{sortedRanking[1].user.name}</p>
                     <p className="text-xs text-muted-foreground">{sortedRanking[1].total_points} pts</p>
                   </div>
-                  <div className="w-10 h-6 sm:w-12 sm:h-8 bg-gradient-to-r from-muted to-muted/80 rounded-t-lg mt-2 flex items-center justify-center">
+                  <div className="w-10 h-6 sm:w-12 sm:h-8 bg-muted rounded-t-lg mt-2 flex items-center justify-center">
                     <span className="text-muted-foreground font-bold text-xs sm:text-sm">{sortedRanking[1].rank}°</span>
                   </div>
                 </div>
@@ -515,7 +515,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               {/* 1st Place (Center, Larger) */}
               {sortedRanking[0] && (
                 <div key={sortedRanking[0].user_id} className="flex flex-col items-center">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center mb-3 shadow-xl border-2 border-border">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-muted rounded-full flex items-center justify-center mb-3 shadow-xl border-2 border-border">
                     <span className="text-xl sm:text-2xl font-bold text-muted-foreground">
                       {sortedRanking[0].user.name.charAt(0).toUpperCase()}
                     </span>
@@ -524,7 +524,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     <p className="font-bold text-base sm:text-lg text-foreground truncate max-w-[100px]">{sortedRanking[0].user.name}</p>
                     <p className="text-sm text-muted-foreground">{sortedRanking[0].total_points} pts</p>
                   </div>
-                  <div className="w-12 h-8 sm:w-16 sm:h-10 bg-gradient-to-r from-muted to-muted/80 rounded-t-lg mt-3 flex items-center justify-center border border-border">
+                  <div className="w-12 h-8 sm:w-16 sm:h-10 bg-muted rounded-t-lg mt-3 flex items-center justify-center border border-border">
                     <span className="text-muted-foreground font-bold text-sm sm:text-base">{sortedRanking[0].rank}°</span>
                   </div>
                 </div>
@@ -532,7 +532,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               {/* 3rd Place (Right) */}
               {sortedRanking[2] && (
                 <div key={sortedRanking[2].user_id} className="flex flex-col items-center">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-muted rounded-full flex items-center justify-center mb-2 shadow-lg">
                     <span className="text-base sm:text-lg font-bold text-muted-foreground">
                       {sortedRanking[2].user.name.charAt(0).toUpperCase()}
                     </span>
@@ -541,7 +541,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     <p className="font-semibold text-xs sm:text-sm text-foreground truncate max-w-[80px]">{sortedRanking[2].user.name}</p>
                     <p className="text-xs text-muted-foreground">{sortedRanking[2].total_points} pts</p>
                   </div>
-                  <div className="w-10 h-6 sm:w-12 sm:h-8 bg-gradient-to-r from-muted to-muted/80 rounded-t-lg mt-2 flex items-center justify-center">
+                  <div className="w-10 h-6 sm:w-12 sm:h-8 bg-muted rounded-t-lg mt-2 flex items-center justify-center">
                     <span className="text-muted-foreground font-bold text-xs sm:text-sm">{sortedRanking[2].rank}°</span>
                   </div>
                 </div>
@@ -612,9 +612,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
                 // Return in visual order: Silver (Left), Gold (Center), Bronze (Right)
                 return [
-                  { players: silverPlayers, type: 'left', label: '2º', medalClass: "bg-gradient-to-r from-secondary to-secondary/80" },
-                  { players: goldPlayers, type: 'center', label: '1º', medalClass: "bg-gradient-to-r from-warning to-warning/80" },
-                  { players: bronzePlayers, type: 'right', label: '3º', medalClass: "bg-gradient-to-r from-warning to-warning/80" }
+                  { players: silverPlayers, type: 'left', label: '2º', medalClass: "bg-gray-400" },
+                  { players: goldPlayers, type: 'center', label: '1º', medalClass: "bg-yellow-400" },
+                  { players: bronzePlayers, type: 'right', label: '3º', medalClass: "bg-yellow-600" }
                 ];
               })();
 
@@ -653,15 +653,15 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         const player = players[0];
                         let medalClass, medalSizeClass, textSizeClass;
                         if (type === 'center') { // 1st Place
-                          medalClass = "bg-gradient-to-r from-warning to-warning/80";
+                          medalClass = "bg-yellow-400";
                           medalSizeClass = "w-20 h-20 sm:w-24 sm:h-24";
                           textSizeClass = "text-xl sm:text-2xl";
                         } else if (type === 'left') { // 2nd Place
-                          medalClass = "bg-gradient-to-r from-secondary to-secondary/80";
+                          medalClass = "bg-gray-400";
                           medalSizeClass = "w-14 h-14 sm:w-16 sm:h-16";
                           textSizeClass = "text-base sm:text-lg";
                         } else { // 3rd Place
-                          medalClass = "bg-gradient-to-r from-warning to-warning/80";
+                          medalClass = "bg-yellow-600";
                           medalSizeClass = "w-14 h-14 sm:w-16 sm:h-16";
                           textSizeClass = "text-base sm:text-lg";
                         }
@@ -669,12 +669,12 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         return (
                           <div key={`${label}-${player.user_id}`} className="flex flex-col items-center">
                             <div className={`${medalClass} ${medalSizeClass} rounded-full flex items-center justify-center shadow-lg relative mb-2 sm:mb-3`}>
-                              <span className={`font-bold text-warning-foreground ${textSizeClass}`}>
+                              <span className={`font-bold text-white ${textSizeClass}`}>
                                 {player.user.name.charAt(0).toUpperCase()}
                               </span>
                               {type === 'center' && (
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-warning/50 rounded-full flex items-center justify-center">
-                                  <Crown className="w-4 h-4 text-warning" />
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-300 rounded-full flex items-center justify-center">
+                                  <Crown className="w-4 h-4 text-yellow-600" />
                                 </div>
                               )}
                             </div>
@@ -687,7 +687,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                               </p>
                             </div>
                             <div className={`${medalClass} ${type === 'center' ? 'w-12 h-8 sm:w-16 sm:h-10 mt-3' : 'w-10 h-6 sm:w-12 sm:h-8 mt-2'} rounded-t-lg flex items-center justify-center`}>
-                              <span className="text-warning-foreground font-bold text-xs sm:text-sm">
+                              <span className="text-white font-bold text-xs sm:text-sm">
                                 {label}
                               </span>
                             </div>
@@ -698,17 +698,17 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         // Display stacked avatars for ties
                         let medalClass, medalSizeClass, textSizeClass, baseSizeClass;
                         if (type === 'center') { // 1st Place
-                          medalClass = "bg-gradient-to-r from-warning to-warning/80";
+                          medalClass = "bg-yellow-400";
                           medalSizeClass = "w-16 h-16 sm:w-20 sm:h-20";
                           textSizeClass = "text-lg sm:text-xl";
                           baseSizeClass = "w-12 h-8 sm:w-16 sm:h-10";
                         } else if (type === 'left') { // 2nd Place
-                          medalClass = "bg-gradient-to-r from-secondary to-secondary/80";
+                          medalClass = "bg-gray-400";
                           medalSizeClass = "w-14 h-14 sm:w-16 sm:h-16";
                           textSizeClass = "text-base sm:text-lg";
                           baseSizeClass = "w-10 h-6 sm:w-12 sm:h-8";
                         } else { // 3rd Place
-                          medalClass = "bg-gradient-to-r from-warning to-warning/80";
+                          medalClass = "bg-yellow-600";
                           medalSizeClass = "w-14 h-14 sm:w-16 sm:h-16";
                           textSizeClass = "text-base sm:text-lg";
                           baseSizeClass = "w-10 h-6 sm:w-12 sm:h-8";
@@ -729,14 +729,14 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                                   }}
                                   title={player.user.name}
                                 >
-                                  <span className={`font-bold text-warning-foreground ${textSizeClass}`}>
+                                  <span className={`font-bold text-white ${textSizeClass}`}>
                                     {player.user.name.charAt(0).toUpperCase()}
                                   </span>
                                 </div>
                               ))}
                               {type === 'center' && (
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-warning/50 rounded-full flex items-center justify-center z-20">
-                                  <Crown className="w-4 h-4 text-warning" />
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-300 rounded-full flex items-center justify-center z-20">
+                                  <Crown className="w-4 h-4 text-yellow-600" />
                                 </div>
                               )}
                               {players.length > 3 && (
@@ -754,7 +754,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                               </p>
                             </div>
                             <div className={`${medalClass} ${baseSizeClass} rounded-t-lg flex items-center justify-center`}>
-                              <span className="text-warning-foreground font-bold text-xs sm:text-sm">
+                              <span className="text-white font-bold text-xs sm:text-sm">
                                 {label}
                               </span>
                             </div>
@@ -828,7 +828,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       {/* Empty State */}
       {filteredRanking.length === 0 && (
         <div className="text-center py-16 px-4">
-          <div className="w-20 h-20 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
             <BarChart3 className="w-10 h-10 text-muted-foreground" />
           </div>
           <h3 className="text-xl font-semibold text-foreground mb-2">
