@@ -58,31 +58,20 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     return a.user.name.localeCompare(b.user.name);
   });
 
-  let rank = 1;
-  for (let i = 0; i < sortedRanking.length; i++) {
-    if (i > 0 && sortedRanking[i].total_points < sortedRanking[i - 1].total_points) {
-      rank++;
+  let lastPoints: number | null = null;
+  let lastRank = 0;
+  let nextRank = 1;
+  sortedRanking.forEach((user, idx) => {
+    if (user.total_points !== lastPoints) {
+      lastRank = nextRank;
     }
-    sortedRanking[i].rank = rank;
-  }
+    user.rank = lastRank;
+    lastPoints = user.total_points;
+    nextRank++;
+  });
 
   // --- Update getMedalIcon to use rank ---
   const getMedalIcon = (rank: number) => {
-    const allPlayersHaveZeroPoints = sortedRanking.length > 0 && sortedRanking.every(player => player.total_points === 0);
-
-    if (allPlayersHaveZeroPoints) {
-      return (
-        <div className="w-8 h-8 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center border-2 border-gray-300 dark:border-gray-500">
-          <span className="text-sm font-bold text-gray-600 dark:text-gray-200">{rank}</span>
-        </div>
-      );
-    }
-
-    const goldPlayers = sortedRanking.filter(p => p.rank === 1);
-    const silverRank = goldPlayers.length + 1;
-    const silverPlayers = sortedRanking.filter(p => p.rank === silverRank);
-    const bronzeRank = silverPlayers.length + silverRank;
-
     if (rank === 1) {
       return (
         <div className="relative">
@@ -93,14 +82,14 @@ export const RankingTable: React.FC<RankingTableProps> = ({
         </div>
       );
     }
-    if (rank === silverRank) {
+    if (rank === 2) {
       return (
         <div className="w-8 h-8 bg-gradient-to-r from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-md">
           <Medal className="w-5 h-5 text-white" />
         </div>
       );
     }
-    if (rank === bronzeRank) {
+    if (rank === 3) {
       return (
         <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-md">
           <Medal className="w-5 h-5 text-white" />
