@@ -1,8 +1,5 @@
 -- This migration updates the ranking logic to handle ties and adds a new field to the user_stats table to store the number of ties.
 
--- Add a new column to the user_stats table to store the number of ties.
-ALTER TABLE user_stats ADD COLUMN rounds_tied INTEGER DEFAULT 0;
-
 -- Update the calculate_detailed_rounds_won_for_league function to handle ties.
 CREATE OR REPLACE FUNCTION calculate_detailed_rounds_won_for_league(league_id_param UUID)
 RETURNS void AS $$
@@ -57,9 +54,11 @@ BEGIN
             HAVING SUM(b2.points) = max_points
         ) round_points;
 
-        -- Find all players who achieved the maximum points and the maximum number of exact scores (winners)
-        FOR winner_record IN
-            SELECT b.user_id, SUM(b.points) as total_points
+        -- Find all players who achieved the maximum points and the maximum number of exact scores (potential winners)
+        WITH round_winners_candidates AS (
+            SELECT
+                b.user_id,
+                SUM(b.points) as total_points
             FROM bets b
             INNER JOIN matches m ON b.match_id = m.id
             WHERE b.league_id = league_id_param
@@ -68,49 +67,54 @@ BEGIN
             AND b.points IS NOT NULL
             GROUP BY b.user_id
             HAVING SUM(b.points) = max_points AND COUNT(CASE WHEN b.is_exact THEN 1 END) = max_exact_scores
-        LOOP
-            -- Insert round winner record
-            INSERT INTO round_winners (user_id, league_id, round_number, points_in_round)
-            VALUES (winner_record.user_id, league_id_param, round_record.round, winner_record.total_points)
-            ON CONFLICT (user_id, league_id, round_number) DO NOTHING;
+        )
+        SELECT
+            ARRAY_AGG(user_id) as winner_ids,
+            COUNT(user_id) as winner_count,
+            MAX(total_points) as points
+        INTO winner_record
+        FROM round_winners_candidates;
 
-            -- Increment rounds_won counter
-            UPDATE user_stats
-            SET rounds_won = rounds_won + 1
-            WHERE user_id = winner_record.user_id
-            AND league_id = league_id_param;
+        -- If we have winners, process them
+        IF winner_record.winner_count > 0 THEN
+            -- If there is a single winner, it's a win
+            IF winner_record.winner_count = 1 THEN
+                -- Insert into round_winners table
+                INSERT INTO round_winners (user_id, league_id, round_number, points_in_round)
+                VALUES (winner_record.winner_ids[1], league_id_param, round_record.round, winner_record.points)
+                ON CONFLICT (user_id, league_id, round_number) DO NOTHING;
 
-            -- If user_stats doesn't exist, create it
-            INSERT INTO user_stats (user_id, league_id, rounds_won)
-            VALUES (winner_record.user_id, league_id_param, 1)
-            ON CONFLICT (user_id, league_id)
-            DO UPDATE SET rounds_won = user_stats.rounds_won + 1;
-        END LOOP;
+                -- Increment rounds_won counter for the single winner
+                UPDATE user_stats
+                SET rounds_won = rounds_won + 1
+                WHERE user_id = winner_record.winner_ids[1] AND league_id = league_id_param;
 
-        -- Find all players who achieved the maximum points but not the maximum number of exact scores (tied)
-        FOR winner_record IN
-            SELECT b.user_id, SUM(b.points) as total_points
-            FROM bets b
-            INNER JOIN matches m ON b.match_id = m.id
-            WHERE b.league_id = league_id_param
-            AND m.round = round_record.round
-            AND m.status = 'finished'
-            AND b.points IS NOT NULL
-            GROUP BY b.user_id
-            HAVING SUM(b.points) = max_points AND COUNT(CASE WHEN b.is_exact THEN 1 END) < max_exact_scores
-        LOOP
-            -- Increment rounds_tied counter
-            UPDATE user_stats
-            SET rounds_tied = rounds_tied + 1
-            WHERE user_id = winner_record.user_id
-            AND league_id = league_id_param;
+                -- If user_stats doesn't exist, create it
+                INSERT INTO user_stats (user_id, league_id, rounds_won)
+                VALUES (winner_record.winner_ids[1], league_id_param, 1)
+                ON CONFLICT (user_id, league_id) DO UPDATE SET rounds_won = user_stats.rounds_won + 1;
 
-            -- If user_stats doesn't exist, create it
-            INSERT INTO user_stats (user_id, league_id, rounds_tied)
-            VALUES (winner_record.user_id, league_id_param, 1)
-            ON CONFLICT (user_id, league_id)
-            DO UPDATE SET rounds_tied = user_stats.rounds_tied + 1;
-        END LOOP;
+            -- If there are multiple winners, it's a tie
+            ELSE
+                -- Loop through all tied winners
+                FOR i IN 1..winner_record.winner_count LOOP
+                    -- Insert into round_winners table
+                    INSERT INTO round_winners (user_id, league_id, round_number, points_in_round)
+                    VALUES (winner_record.winner_ids[i], league_id_param, round_record.round, winner_record.points)
+                    ON CONFLICT (user_id, league_id, round_number) DO NOTHING;
+
+                    -- Increment rounds_tied counter for each tied winner
+                    UPDATE user_stats
+                    SET rounds_tied = rounds_tied + 1
+                    WHERE user_id = winner_record.winner_ids[i] AND league_id = league_id_param;
+
+                    -- If user_stats doesn't exist, create it
+                    INSERT INTO user_stats (user_id, league_id, rounds_tied)
+                    VALUES (winner_record.winner_ids[i], league_id_param, 1)
+                    ON CONFLICT (user_id, league_id) DO UPDATE SET rounds_tied = user_stats.rounds_tied + 1;
+                END LOOP;
+            END IF;
+        END IF;
 
         RAISE NOTICE 'Calculated round % winners for league % (max points: %, max exact scores: %)',
             round_record.round, league_id_param, max_points, max_exact_scores;

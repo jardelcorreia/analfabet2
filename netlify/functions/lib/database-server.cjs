@@ -531,7 +531,9 @@ const dbHelpers = {
           COALESCE(all_stats.total_points, 0) as total_points,
           COALESCE(all_stats.exact_scores, 0) as exact_scores,
           COALESCE(all_stats.total_bets, 0) as total_bets,
-          COALESCE(all_stats.correct_results, 0) as correct_results
+          COALESCE(all_stats.correct_results, 0) as correct_results,
+          COALESCE(us.rounds_won, 0) as rounds_won,
+          COALESCE(us.rounds_tied, 0) as rounds_tied
         FROM league_members lm
         INNER JOIN users u ON lm.user_id = u.id
         LEFT JOIN (
@@ -545,6 +547,7 @@ const dbHelpers = {
           WHERE b.league_id = ${leagueId}
           GROUP BY b.user_id
         ) as all_stats ON lm.user_id = all_stats.user_id
+        LEFT JOIN user_stats us ON lm.user_id = us.user_id AND lm.league_id = us.league_id
         WHERE lm.league_id = ${leagueId}
         ORDER BY total_points DESC NULLS LAST, exact_scores DESC
       `;
@@ -571,9 +574,9 @@ const dbHelpers = {
         exact_scores,
         total_bets: Number(row.total_bets),
         correct_results: Number(row.correct_results),
-        rounds_won: roundsWonList.length,
+        rounds_won: Number(row.rounds_won),
         rounds_won_list: roundsWonList,
-        rounds_tied: Number(row.rounds_tied || 0),
+        rounds_tied: Number(row.rounds_tied),
         rank: rank,
         user: {
           id: row.user_id,
