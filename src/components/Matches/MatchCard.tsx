@@ -124,7 +124,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         <div className="flex items-center space-x-2">
           <Calendar className="w-4 h-4 text-muted-foreground flex-shrink-0" />
           <span className="text-xs sm:text-sm text-muted-foreground">
-            {format(new Date(match.match_date), 'dd/MM/yyyy - HH:mm', { locale: ptBR })}
+            {format(new Date(match.match_date), "eeee, d 'de' MMMM - HH:mm", { locale: ptBR })}
           </span>
         </div>
         <span className={`self-start sm:self-auto px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(match.status)}`}>

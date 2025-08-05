@@ -104,7 +104,7 @@ export const LeagueBets: React.FC<LeagueBetsProps> = ({ league }) => {
                 </div>
               </div>
               <div className="text-center text-xs text-muted-foreground mt-1">
-                {format(new Date(match.match_date), 'dd/MM HH:mm', { locale: ptBR })}
+                {format(new Date(match.match_date), "eeee, d 'de' MMMM - HH:mm", { locale: ptBR })}
               </div>
             </div>
             <div className="p-3 flex flex-wrap gap-3">
