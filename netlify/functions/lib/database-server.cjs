@@ -445,17 +445,27 @@ const dbHelpers = {
   async getLeagueRanking(leagueId, round) {
     // Helper function to fetch rounds won data
     const getRoundsWonData = async () => {
-      const roundsWonData = await sql`
+      const roundsData = await sql`
+        WITH winners AS (
+          SELECT
+            user_id,
+            round_number,
+            COUNT(*) OVER (PARTITION BY round_number) as winner_count
+          FROM round_winners
+          WHERE league_id = ${leagueId}
+        )
         SELECT
-          rw.user_id,
-          ARRAY_AGG(rw.round_number ORDER BY rw.round_number) as rounds_won_list
-        FROM round_winners rw
-        WHERE rw.league_id = ${leagueId}
-        GROUP BY rw.user_id
+          user_id,
+          ARRAY_AGG(
+            JSON_BUILD_OBJECT('round', round_number, 'type', CASE WHEN winner_count > 1 THEN 'tie' ELSE 'win' END)
+            ORDER BY round_number
+          ) as round_results
+        FROM winners
+        GROUP BY user_id
       `;
       const roundsWonMap = new Map();
-      roundsWonData.forEach(row => {
-        roundsWonMap.set(row.user_id, row.rounds_won_list || []);
+      roundsData.forEach(row => {
+        roundsWonMap.set(row.user_id, row.round_results || []);
       });
       return roundsWonMap;
     };
@@ -558,7 +568,7 @@ const dbHelpers = {
     let last_total_points = -1;
     let last_exact_scores = -1;
     return liveRankingResult.map((row, index) => {
-      const roundsWonList = roundsWonMap.get(row.user_id) || [];
+      const round_results = roundsWonMap.get(row.user_id) || [];
       const total_points = Number(row.total_points);
       const exact_scores = Number(row.exact_scores);
 
@@ -575,7 +585,7 @@ const dbHelpers = {
         total_bets: Number(row.total_bets),
         correct_results: Number(row.correct_results),
         rounds_won: Number(row.rounds_won),
-        rounds_won_list: roundsWonList,
+        round_results: round_results,
         rounds_tied: Number(row.rounds_tied),
         rank: rank,
         user: {

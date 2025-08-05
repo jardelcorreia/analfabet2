@@ -51,6 +51,11 @@ export interface Bet {
   user: User;
 }
 
+export interface RoundResult {
+  round: number;
+  type: 'win' | 'tie';
+}
+
 export interface UserStats {
   user_id: string;
   league_id: string;
@@ -59,7 +64,7 @@ export interface UserStats {
   total_bets: number;
   correct_results: number;
   rounds_won: number;
-  rounds_won_list: number[];
+  round_results: RoundResult[];
   rounds_tied: number;
   rank: number;
   user: User;

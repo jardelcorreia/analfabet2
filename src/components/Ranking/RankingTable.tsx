@@ -231,26 +231,31 @@ export const RankingTable: React.FC<RankingTableProps> = ({
           </div>
 
           {/* Expanded Details - Mobile - Apenas visível em 'todas as rodadas' */}
-          {selectedRound === 'all' && expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
+          {selectedRound === 'all' && expandedRows.has(userStat.user_id) && (userStat.rounds_won > 0 || userStat.rounds_tied > 0) && (
             <div className="mt-3 p-3 bg-secondary/10 rounded-lg">
               <div className="text-xs font-medium text-secondary-foreground mb-2">
-                Rodadas vencidas:
+                Melhores Rodadas:
               </div>
               <div className="grid grid-cols-6 gap-1">
-                {userStat.rounds_won_list &&
-                  userStat.rounds_won_list.slice(0, 12).map((round) => (
+                {userStat.round_results &&
+                  userStat.round_results.slice(0, 12).map((result) => (
                     <div
-                      key={round}
-                      className="flex items-center justify-center bg-secondary/20 rounded px-1 py-0.5"
+                      key={result.round}
+                      className={`flex items-center justify-center rounded px-1 py-0.5 ${
+                        result.type === 'win' ? 'bg-green-500/20' : 'bg-yellow-500/20'
+                      }`}
+                      title={result.type === 'win' ? `Vitória na Rodada ${result.round}` : `Empate na Rodada ${result.round}`}
                     >
-                      <span className="text-xs font-medium text-secondary-foreground">
-                        R{round}
+                      <span className={`text-xs font-medium ${
+                        result.type === 'win' ? 'text-green-300' : 'text-yellow-300'
+                      }`}>
+                        R{result.round} ({result.type === 'win' ? 'V' : 'E'})
                       </span>
                     </div>
                   ))}
-                {userStat.rounds_won_list && userStat.rounds_won_list.length > 12 && (
+                {userStat.round_results && userStat.round_results.length > 12 && (
                   <div className="flex items-center justify-center text-xs text-secondary-foreground col-span-2">
-                    +{userStat.rounds_won_list.length - 12} mais
+                    +{userStat.round_results.length - 12} mais
                   </div>
                 )}
               </div>
@@ -323,17 +328,17 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               <div className="flex items-center justify-center">
                 <div
                   className={`flex items-center space-x-1 bg-secondary/10 rounded-full px-3 py-1 ${
-                    userStat.rounds_won > 0
+                    (userStat.rounds_won > 0 || userStat.rounds_tied > 0)
                       ? 'cursor-pointer hover:bg-secondary/20 transition-colors'
                       : ''
                   }`}
-                  onClick={() => userStat.rounds_won > 0 && toggleRowExpansion(userStat.user_id)} // Só permite clique se houver rodadas vencidas
+                  onClick={() => (userStat.rounds_won > 0 || userStat.rounds_tied > 0) && toggleRowExpansion(userStat.user_id)}
                 >
                   <Crown className="w-4 h-4 text-secondary-foreground" />
                   <span className="text-sm font-medium text-secondary-foreground">
                     {userStat.rounds_won || 0} / {userStat.rounds_tied || 0}
                   </span>
-                  {userStat.rounds_won > 0 && (
+                  {(userStat.rounds_won > 0 || userStat.rounds_tied > 0) && (
                     expandedRows.has(userStat.user_id) ? (
                       <ChevronUp className="w-3 h-3 text-secondary-foreground" />
                     ) : (
@@ -356,26 +361,30 @@ export const RankingTable: React.FC<RankingTableProps> = ({
           </td>
         </tr>
         {/* Expanded Details Row - Desktop - Apenas visível em 'todas as rodadas' */}
-        {selectedRound === 'all' && expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
+        {selectedRound === 'all' && expandedRows.has(userStat.user_id) && (userStat.rounds_won > 0 || userStat.rounds_tied > 0) && (
           <tr className="bg-secondary/10 border-l-4 border-secondary/20">
             <td colSpan={selectedRound === 'all' ? 7 : 6} className="px-4 sm:px-6 py-4">
               <div className="flex flex-col space-y-3">
                 <div className="flex items-center space-x-2">
                   <Crown className="w-5 h-5 text-secondary-foreground" />
                   <span className="font-semibold text-secondary-foreground">
-                    Rodadas vencidas por {userStat.user.name}:
+                    Melhores Rodadas de {userStat.user.name}:
                   </span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
-                  {userStat.rounds_won_list &&
-                    userStat.rounds_won_list.map((round) => (
+                  {userStat.round_results &&
+                    userStat.round_results.map((result) => (
                       <div
-                        key={round}
-                        className="flex items-center justify-center bg-secondary/20 hover:bg-secondary/30 rounded-lg px-3 py-2 transition-colors cursor-pointer"
-                        title={`Rodada ${round} - Clique para ver detalhes`}
+                        key={result.round}
+                        className={`flex items-center justify-center rounded-lg px-3 py-2 transition-colors cursor-pointer ${
+                          result.type === 'win' ? 'bg-green-500/20 hover:bg-green-500/30' : 'bg-yellow-500/20 hover:bg-yellow-500/30'
+                        }`}
+                        title={result.type === 'win' ? `Vitória na Rodada ${result.round}` : `Empate na Rodada ${result.round}`}
                       >
-                        <span className="text-sm font-medium text-secondary-foreground">
-                          R{round}
+                        <span className={`text-sm font-medium ${
+                          result.type === 'win' ? 'text-green-300' : 'text-yellow-300'
+                        }`}>
+                          R{result.round} ({result.type === 'win' ? 'V' : 'E'})
                         </span>
                       </div>
                     ))}
@@ -383,7 +392,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                 <div className="text-xs text-secondary-foreground flex items-center space-x-1">
                   <Info className="w-4 h-4" />
                   <span>
-                    Total: {userStat.rounds_won} rodada{userStat.rounds_won !== 1 ? 's' : ''} vencida{userStat.rounds_won !== 1 ? 's' : ''}
+                    Total: {userStat.rounds_won} {userStat.rounds_won !== 1 ? 'vitórias' : 'vitória'} e {userStat.rounds_tied} {userStat.rounds_tied !== 1 ? 'empates' : 'empate'}
                   </span>
                 </div>
               </div>
