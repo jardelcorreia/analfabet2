@@ -55,21 +55,16 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   // --- NEW: Sort and assign ranks with ties ---
   const sortedRanking = [...filteredRanking].sort((a, b) => {
     if (b.total_points !== a.total_points) return b.total_points - a.total_points;
-    if (b.exact_scores !== a.exact_scores) return b.exact_scores - a.exact_scores;
     return a.user.name.localeCompare(b.user.name);
   });
 
-  let lastPoints: number | null = null;
-  let lastRank = 0;
-  let nextRank = 1;
-  sortedRanking.forEach((user, idx) => {
-    if (user.total_points !== lastPoints) {
-      lastRank = nextRank;
+  let rank = 1;
+  for (let i = 0; i < sortedRanking.length; i++) {
+    if (i > 0 && sortedRanking[i].total_points < sortedRanking[i - 1].total_points) {
+      rank++;
     }
-    user.rank = lastRank;
-    lastPoints = user.total_points;
-    nextRank++;
-  });
+    sortedRanking[i].rank = rank;
+  }
 
   // --- Update getMedalIcon to use rank ---
   const getMedalIcon = (rank: number) => {
