@@ -52,18 +52,25 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     return matchesSearch && matchesFilter;
   });
 
-  // --- NEW: Sort and assign ranks with ties ---
+  // --- Sort and assign ranks with ties, matching backend logic ---
   const sortedRanking = [...filteredRanking].sort((a, b) => {
     if (b.total_points !== a.total_points) return b.total_points - a.total_points;
+    if (b.exact_scores !== a.exact_scores) return b.exact_scores - a.exact_scores;
     return a.user.name.localeCompare(b.user.name);
   });
 
-  let rank = 1;
   for (let i = 0; i < sortedRanking.length; i++) {
-    if (i > 0 && sortedRanking[i].total_points < sortedRanking[i - 1].total_points) {
-      rank++;
+    if (i === 0) {
+      sortedRanking[i].rank = 1;
+    } else {
+      const prev = sortedRanking[i - 1];
+      const curr = sortedRanking[i];
+      if (curr.total_points === prev.total_points && curr.exact_scores === prev.exact_scores) {
+        curr.rank = prev.rank;
+      } else {
+        curr.rank = i + 1;
+      }
     }
-    sortedRanking[i].rank = rank;
   }
 
   // --- Update getMedalIcon to use rank ---
