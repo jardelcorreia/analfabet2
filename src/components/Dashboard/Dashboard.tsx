@@ -24,7 +24,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
   const [selectedRound, setSelectedRound] = useState<number | 'all' | undefined>(undefined);
   
   const { leagues, loading: leaguesLoading, createLeague, joinLeague, refreshLeagues } = useLeagues(user.id);
-  const { ranking, loading: rankingLoading, displayedRound: rankingDisplayedRound, refreshRanking } = useRanking(selectedLeague?.id || '', selectedRound);
+  const { ranking, loading: rankingLoading, displayedRound: rankingDisplayedRound, isDefined, refreshRanking } = useRanking(selectedLeague?.id || '', selectedRound);
   const { matches, loading: matchesLoading, error: matchesError, displayedRound: matchesDisplayedRound, refreshMatches } = useMatches(selectedRound);
 
   useEffect(() => {
@@ -149,6 +149,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSignOut }) => {
               selectedRound={selectedRound}
               onRoundChange={setSelectedRound}
               totalRounds={38} // Assuming a total of 38 rounds for the season
+              isDefined={isDefined}
             />
           </div>
         ) : (
