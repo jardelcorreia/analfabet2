@@ -50,7 +50,7 @@ export const LeagueBets: React.FC<LeagueBetsProps> = ({ league }) => {
   const getResultBadge = (bet: Bet) => {
     if (bet.match.status !== 'finished' && bet.match.status !== 'live') return { text: 'P', color: 'bg-muted text-muted-foreground' };
     if (bet.is_exact) return { text: '3', color: 'bg-success/10 text-success' };
-    if (bet.points && bet.points > 0) return { text: '1', color: 'bg-warning/10 text-warning-foreground' };
+    if (bet.points && bet.points > 0) return { text: '1', color: 'bg-warning/10 text-warning' };
     return { text: '0', color: 'bg-destructive/10 text-destructive' };
   };
 
