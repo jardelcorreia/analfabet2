@@ -522,7 +522,7 @@ const dbHelpers = {
     }
 
     // For 'all' rounds, we will also calculate on the fly to get live results
-    const result = await sql`
+    const liveRankingResult = await sql`
         SELECT
           lm.user_id,
           u.name as user_name,
@@ -546,7 +546,7 @@ const dbHelpers = {
           GROUP BY b.user_id
         ) as all_stats ON lm.user_id = all_stats.user_id
         WHERE lm.league_id = ${leagueId}
-        ORDER BY total_points DESC, exact_scores DESC
+        ORDER BY total_points DESC NULLS LAST, exact_scores DESC
       `;
 
     const roundsWonMap = await getRoundsWonData();
@@ -554,7 +554,7 @@ const dbHelpers = {
     let rank = 1;
     let last_total_points = -1;
     let last_exact_scores = -1;
-    return result.map((row, index) => {
+    return liveRankingResult.map((row, index) => {
       const roundsWonList = roundsWonMap.get(row.user_id) || [];
       const total_points = Number(row.total_points);
       const exact_scores = Number(row.exact_scores);
@@ -565,12 +565,12 @@ const dbHelpers = {
       last_total_points = total_points;
       last_exact_scores = exact_scores;
       return {
-        ...row,
+        user_id: row.user_id,
+        league_id: leagueId,
         total_points,
         exact_scores,
         total_bets: Number(row.total_bets),
         correct_results: Number(row.correct_results),
-        league_id: leagueId,
         rounds_won: roundsWonList.length,
         rounds_won_list: roundsWonList,
         rounds_tied: Number(row.rounds_tied || 0),
@@ -579,7 +579,7 @@ const dbHelpers = {
           id: row.user_id,
           name: row.user_name,
           email: row.user_email,
-          avatar: row.user_avatar,
+          avatar: row.user_avatar
         }
       };
     });
