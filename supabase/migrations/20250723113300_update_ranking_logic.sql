@@ -84,12 +84,7 @@ BEGIN
                 VALUES (winner_record.winner_ids[1], league_id_param, round_record.round, winner_record.points)
                 ON CONFLICT (user_id, league_id, round_number) DO NOTHING;
 
-                -- Increment rounds_won counter for the single winner
-                UPDATE user_stats
-                SET rounds_won = rounds_won + 1
-                WHERE user_id = winner_record.winner_ids[1] AND league_id = league_id_param;
-
-                -- If user_stats doesn't exist, create it
+                -- If user_stats doesn't exist, create it, otherwise update it
                 INSERT INTO user_stats (user_id, league_id, rounds_won)
                 VALUES (winner_record.winner_ids[1], league_id_param, 1)
                 ON CONFLICT (user_id, league_id) DO UPDATE SET rounds_won = user_stats.rounds_won + 1;
@@ -103,12 +98,7 @@ BEGIN
                     VALUES (winner_record.winner_ids[i], league_id_param, round_record.round, winner_record.points)
                     ON CONFLICT (user_id, league_id, round_number) DO NOTHING;
 
-                    -- Increment rounds_tied counter for each tied winner
-                    UPDATE user_stats
-                    SET rounds_tied = rounds_tied + 1
-                    WHERE user_id = winner_record.winner_ids[i] AND league_id = league_id_param;
-
-                    -- If user_stats doesn't exist, create it
+                    -- If user_stats doesn't exist, create it, otherwise update it
                     INSERT INTO user_stats (user_id, league_id, rounds_tied)
                     VALUES (winner_record.winner_ids[i], league_id_param, 1)
                     ON CONFLICT (user_id, league_id) DO UPDATE SET rounds_tied = user_stats.rounds_tied + 1;

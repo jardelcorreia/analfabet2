@@ -247,7 +247,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                       title={result.type === 'win' ? `Vitória na Rodada ${result.round}` : `Empate na Rodada ${result.round}`}
                     >
                       <span className={`text-xs font-medium ${
-                        result.type === 'win' ? 'text-green-300' : 'text-yellow-300'
+                        result.type === 'win' ? 'text-green-800 dark:text-green-300' : 'text-yellow-800 dark:text-yellow-300'
                       }`}>
                         R{result.round} ({result.type === 'win' ? 'V' : 'E'})
                       </span>
@@ -382,7 +382,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         title={result.type === 'win' ? `Vitória na Rodada ${result.round}` : `Empate na Rodada ${result.round}`}
                       >
                         <span className={`text-sm font-medium ${
-                          result.type === 'win' ? 'text-green-300' : 'text-yellow-300'
+                          result.type === 'win' ? 'text-green-800 dark:text-green-300' : 'text-yellow-800 dark:text-yellow-300'
                         }`}>
                           R{result.round} ({result.type === 'win' ? 'V' : 'E'})
                         </span>
@@ -810,7 +810,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                 </th>
                 {selectedRound === 'all' && (
                   <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider hidden lg:table-cell">
-                    Rodadas Vencidas
+                    Vitórias / Empates
                   </th>
                 )}
                 <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider hidden md:table-cell">
