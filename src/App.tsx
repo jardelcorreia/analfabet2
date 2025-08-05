@@ -38,10 +38,10 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-yellow-400 flex items-center justify-center dark:from-gray-800 dark:via-gray-900 dark:to-black">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-8 shadow-2xl">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 dark:border-green-400 mx-auto"></div>
-          <p className="text-center mt-4 text-gray-600 dark:text-gray-300">Carregando...</p>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="bg-card rounded-lg p-8 shadow-2xl">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-center mt-4 text-muted-foreground">Carregando...</p>
         </div>
       </div>
     );
