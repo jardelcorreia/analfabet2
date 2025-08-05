@@ -1,6 +1,6 @@
 -- This migration enhances the round winner calculation to include "mathematic" winners
--- for ongoing rounds. It also introduces a function to check if a round's outcome
--- is mathematically defined.
+-- for ongoing rounds, correctly handling in-progress matches. It also introduces a
+-- function to check if a round's outcome is mathematically defined.
 
 -- Step 1: Create a function to check if a round is mathematically defined.
 CREATE OR REPLACE FUNCTION is_round_mathematically_defined(p_league_id UUID, p_round_number INTEGER)
@@ -40,7 +40,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Step 2: Update the main calculation function to find mathematic winners.
+-- Step 2: Update the main calculation function to find mathematic winners robustly.
 CREATE OR REPLACE FUNCTION calculate_detailed_rounds_won_for_league(league_id_param UUID)
 RETURNS void AS $$
 DECLARE
@@ -51,12 +51,13 @@ DECLARE
     ongoing_round_record RECORD;
     remaining_matches_count INTEGER;
     max_potential_points_gain INTEGER;
-    leader_score INTEGER;
+    leader_locked_in_score INTEGER;
     leader_user_id UUID;
     is_unbeatable BOOLEAN;
+    competitor_locked_in_score INTEGER;
+
 BEGIN
     -- Clear existing round winners for this league to recalculate everything.
-    -- This is safe because we re-evaluate both finished and ongoing rounds.
     DELETE FROM round_winners WHERE league_id = league_id_param;
 
     -- Part 1: Calculate winners for ONGOING rounds (mathematic winners)
@@ -72,24 +73,22 @@ BEGIN
         )
         ORDER BY m.round
     LOOP
-        -- Calculate remaining matches and potential points
+        -- Calculate remaining matches (scheduled or in-progress) and potential points
         SELECT COUNT(*) INTO remaining_matches_count
         FROM matches
         WHERE round = ongoing_round_record.round AND status != 'finished';
 
         max_potential_points_gain := remaining_matches_count * 3;
 
-        -- Find the current leader and their score
-        SELECT user_id, SUM(points) INTO leader_user_id, leader_score
-        FROM (
-            SELECT b.user_id, COALESCE(SUM(b.points), 0) as points
-            FROM bets b
-            JOIN matches m ON b.match_id = m.id
-            WHERE b.league_id = league_id_param AND m.round = ongoing_round_record.round
-            GROUP BY b.user_id
-        ) as player_scores
-        GROUP BY user_id
-        ORDER BY SUM(points) DESC
+        -- Find the current leader and their "locked-in" score (from finished matches only)
+        SELECT b.user_id, COALESCE(SUM(b.points), 0) INTO leader_user_id, leader_locked_in_score
+        FROM bets b
+        JOIN matches m ON b.match_id = m.id
+        WHERE b.league_id = league_id_param
+          AND m.round = ongoing_round_record.round
+          AND m.status = 'finished'
+        GROUP BY b.user_id
+        ORDER BY SUM(b.points) DESC
         LIMIT 1;
 
         -- If there's no leader, skip
@@ -100,18 +99,24 @@ BEGIN
         -- Check if the leader is unbeatable
         is_unbeatable := TRUE;
         FOR winner_record IN
-            SELECT user_id, SUM(points) as current_score
-            FROM (
-                SELECT b.user_id, COALESCE(SUM(b.points), 0) as points
-                FROM bets b
-                JOIN matches m ON b.match_id = m.id
-                WHERE b.league_id = league_id_param AND m.round = ongoing_round_record.round
-                GROUP BY b.user_id
-            ) as player_scores
-            WHERE user_id != leader_user_id
-            GROUP BY user_id
+            SELECT b.user_id
+            FROM bets b
+            JOIN matches m ON b.match_id = m.id
+            WHERE b.league_id = league_id_param
+              AND m.round = ongoing_round_record.round
+              AND b.user_id != leader_user_id
+            GROUP BY b.user_id
         LOOP
-            IF leader_score < winner_record.current_score + max_potential_points_gain THEN
+            -- Calculate competitor's locked-in score
+            SELECT COALESCE(SUM(b.points), 0) INTO competitor_locked_in_score
+            FROM bets b
+            JOIN matches m ON b.match_id = m.id
+            WHERE b.league_id = league_id_param
+              AND m.round = ongoing_round_record.round
+              AND m.status = 'finished'
+              AND b.user_id = winner_record.user_id;
+
+            IF leader_locked_in_score < competitor_locked_in_score + max_potential_points_gain THEN
                 is_unbeatable := FALSE;
                 EXIT;
             END IF;
@@ -120,7 +125,7 @@ BEGIN
         -- If leader is unbeatable, insert them as a winner
         IF is_unbeatable THEN
             INSERT INTO round_winners (user_id, league_id, round_number, points_in_round)
-            VALUES (leader_user_id, league_id_param, ongoing_round_record.round, leader_score)
+            VALUES (leader_user_id, league_id_param, ongoing_round_record.round, leader_locked_in_score)
             ON CONFLICT (user_id, league_id, round_number) DO NOTHING;
         END IF;
 
