@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({ userName, onSignOut, onNavigateT
   }, []);
 
   return (
-    <header className="bg-gradient-to-r from-green-600 to-green-700 dark:from-gray-800 dark:to-gray-900 text-white shadow-lg sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-gray-800 dark:to-gray-900 text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <button onClick={onGoHome} className="flex items-center space-x-2 cursor-pointer">
@@ -87,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ userName, onSignOut, onNavigateT
             </button>
             <button
               onClick={onSignOut}
-              className="flex items-center space-x-1 px-3 py-2 rounded-lg bg-green-500 hover:bg-green-400 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
+              className="flex items-center space-x-1 px-3 py-2 rounded-lg bg-blue-500 hover:bg-blue-400 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Sair</span>

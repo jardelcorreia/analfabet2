@@ -124,7 +124,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     const isTopThree = position <= 3;
 
     if (isCurrentUser) {
-      return 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-l-4 border-green-500 shadow-sm';
+      return 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-l-4 border-blue-500 shadow-sm';
     }
 
     if (isTopThree) {
@@ -161,7 +161,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             {/* Left: Position, Avatar, Name */}
             <div className="flex items-center space-x-3 flex-1 min-w-0">
               {getMedalIcon(position)}
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md flex-shrink-0">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md flex-shrink-0">
                 {userStat.user.name.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
@@ -170,7 +170,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     {userStat.user.name}
                   </span>
                   {userStat.user_id === currentUserId && (
-                    <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 rounded-full flex-shrink-0">
+                    <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full flex-shrink-0">
                       Você
                     </span>
                   )}
@@ -277,7 +277,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
           </td>
           <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
             <div className="flex items-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-md">
                 {userStat.user.name.charAt(0).toUpperCase()}
               </div>
               <div className="ml-3 sm:ml-4">
@@ -286,7 +286,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     {userStat.user.name}
                   </span>
                   {userStat.user_id === currentUserId && (
-                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 rounded-full">
+                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full">
                       Você
                     </span>
                   )}
