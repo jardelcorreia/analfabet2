@@ -77,8 +77,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
     if (allPlayersHaveZeroPoints) {
       return (
-        <div className="w-8 h-8 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center border-2 border-gray-300 dark:border-gray-500">
-          <span className="text-sm font-bold text-gray-600 dark:text-gray-200">{rank}</span>
+        <div className="w-8 h-8 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center border-2 border-border">
+          <span className="text-sm font-bold text-muted-foreground">{rank}</span>
         </div>
       );
     }
@@ -91,30 +91,30 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     if (rank === 1) {
       return (
         <div className="relative">
-          <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
-            <Crown className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 bg-gradient-to-r from-warning to-warning/80 rounded-full flex items-center justify-center shadow-lg">
+            <Crown className="w-5 h-5 text-warning-foreground" />
           </div>
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-pulse"></div>
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-warning/50 rounded-full animate-pulse"></div>
         </div>
       );
     }
     if (rank === silverRank) {
       return (
-        <div className="w-8 h-8 bg-gradient-to-r from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-md">
-          <Medal className="w-5 h-5 text-white" />
+        <div className="w-8 h-8 bg-gradient-to-r from-secondary to-secondary/80 rounded-full flex items-center justify-center shadow-md">
+          <Medal className="w-5 h-5 text-secondary-foreground" />
         </div>
       );
     }
     if (rank === bronzeRank) {
       return (
-        <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-md">
-          <Medal className="w-5 h-5 text-white" />
+        <div className="w-8 h-8 bg-gradient-to-r from-warning to-warning/80 rounded-full flex items-center justify-center shadow-md">
+          <Medal className="w-5 h-5 text-warning-foreground" />
         </div>
       );
     }
     return (
-      <div className="w-8 h-8 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center border-2 border-gray-300 dark:border-gray-500">
-        <span className="text-sm font-bold text-gray-600 dark:text-gray-200">{rank}</span>
+      <div className="w-8 h-8 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center border-2 border-border">
+        <span className="text-sm font-bold text-muted-foreground">{rank}</span>
       </div>
     );
   };
@@ -124,27 +124,27 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     const isTopThree = position <= 3;
 
     if (isCurrentUser) {
-      return 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-l-4 border-blue-500 shadow-sm';
+      return 'bg-gradient-to-r from-primary/10 to-secondary/10 border-l-4 border-primary shadow-sm';
     }
 
     if (isTopThree) {
-      return 'bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 hover:from-yellow-100 hover:to-amber-100 dark:hover:from-yellow-900/30 dark:hover:to-amber-900/30 transition-all duration-200';
+      return 'bg-gradient-to-r from-warning/10 to-warning/20 hover:from-warning/20 hover:to-warning/30 transition-all duration-200';
     }
 
-    return 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200';
+    return 'bg-card hover:bg-muted transition-all duration-200';
   };
 
   const getAccuracyColor = (accuracy: number) => {
-    if (accuracy >= 70) return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/50';
-    if (accuracy >= 50) return 'text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/50';
-    return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/50';
+    if (accuracy >= 70) return 'text-success bg-success/10';
+    if (accuracy >= 50) return 'text-warning bg-warning/10';
+    return 'text-destructive bg-destructive/10';
   };
 
   const getPositionBadge = (position: number) => {
-    if (position === 1) return 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white';
-    if (position === 2) return 'bg-gradient-to-r from-gray-300 to-gray-400 text-white';
-    if (position === 3) return 'bg-gradient-to-r from-amber-500 to-amber-600 text-white';
-    return 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200';
+    if (position === 1) return 'bg-gradient-to-r from-warning to-warning/80 text-warning-foreground';
+    if (position === 2) return 'bg-gradient-to-r from-secondary to-secondary/80 text-secondary-foreground';
+    if (position === 3) return 'bg-gradient-to-r from-warning to-warning/80 text-warning-foreground';
+    return 'bg-muted text-muted-foreground';
   };
 
   // Compact Mobile Row Component
@@ -154,37 +154,37 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       : 0;
 
     return (
-      <div className={`border-b border-gray-200 dark:border-gray-700 transition-all duration-200 ${getRowClass(userStat.user_id, position)}`}>
+      <div className={`border-b border-border transition-all duration-200 ${getRowClass(userStat.user_id, position)}`}>
         <div className="px-4 py-3">
           {/* Main Row */}
           <div className="flex items-center justify-between">
             {/* Left: Position, Avatar, Name */}
             <div className="flex items-center space-x-3 flex-1 min-w-0">
               {getMedalIcon(position)}
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md flex-shrink-0">
+              <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-primary-foreground font-bold text-xs shadow-md flex-shrink-0">
                 {userStat.user.name.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                  <span className="text-sm font-medium text-card-foreground truncate">
                     {userStat.user.name}
                   </span>
                   {userStat.user_id === currentUserId && (
-                    <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full flex-shrink-0">
+                    <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full flex-shrink-0">
                       Você
                     </span>
                   )}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                <div className="text-xs text-muted-foreground truncate">
                   {userStat.user.email}
                 </div>
               </div>
             </div>
 
             {/* Right: Points */}
-            <div className="flex items-center space-x-1 bg-yellow-100 dark:bg-yellow-900/50 rounded-full px-2 py-1 flex-shrink-0">
-              <Trophy className="w-3 h-3 text-yellow-600 dark:text-yellow-400" />
-              <span className="text-sm font-bold text-yellow-800 dark:text-yellow-200">
+            <div className="flex items-center space-x-1 bg-warning/10 rounded-full px-2 py-1 flex-shrink-0">
+              <Trophy className="w-3 h-3 text-warning" />
+              <span className="text-sm font-bold text-warning-foreground">
                 {userStat.total_points}
               </span>
             </div>
@@ -195,16 +195,16 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             <div className="flex items-center space-x-4">
               {/* Exact Scores */}
               <div className="flex items-center space-x-1">
-                <Target className="w-3 h-3 text-green-600 dark:text-green-400" />
-                <span className="text-gray-700 dark:text-gray-300">{userStat.exact_scores}</span>
+                <Target className="w-3 h-3 text-success" />
+                <span className="text-muted-foreground">{userStat.exact_scores}</span>
               </div>
 
               {/* Rounds Won - Mobile - Apenas visível em 'todas as rodadas' */}
               {selectedRound === 'all' && (
                 <div className="flex items-center space-x-1">
-                  <Crown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                  <span className="text-gray-700 dark:text-gray-300">{userStat.rounds_won || 0}</span>
-                  <span className="text-gray-500 dark:text-gray-400">/ {userStat.rounds_tied || 0}</span>
+                  <Crown className="w-3 h-3 text-secondary" />
+                  <span className="text-muted-foreground">{userStat.rounds_won || 0}</span>
+                  <span className="text-muted-foreground">/ {userStat.rounds_tied || 0}</span>
                 </div>
               )}
 
@@ -218,7 +218,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             {selectedRound === 'all' && userStat.rounds_won > 0 && (
               <button
                 onClick={() => toggleRowExpansion(userStat.user_id)}
-                className="flex items-center space-x-1 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-200 transition-colors p-1"
+                className="flex items-center space-x-1 text-secondary hover:text-secondary/80 transition-colors p-1"
               >
                 <span className="text-xs">Detalhes</span>
                 {expandedRows.has(userStat.user_id) ? (
@@ -232,8 +232,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
           {/* Expanded Details - Mobile - Apenas visível em 'todas as rodadas' */}
           {selectedRound === 'all' && expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
-            <div className="mt-3 p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-              <div className="text-xs font-medium text-purple-800 dark:text-purple-200 mb-2">
+            <div className="mt-3 p-3 bg-secondary/10 rounded-lg">
+              <div className="text-xs font-medium text-secondary-foreground mb-2">
                 Rodadas vencidas:
               </div>
               <div className="grid grid-cols-6 gap-1">
@@ -241,15 +241,15 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                   userStat.rounds_won_list.slice(0, 12).map((round) => (
                     <div
                       key={round}
-                      className="flex items-center justify-center bg-purple-100 dark:bg-purple-800 rounded px-1 py-0.5"
+                      className="flex items-center justify-center bg-secondary/20 rounded px-1 py-0.5"
                     >
-                      <span className="text-xs font-medium text-purple-800 dark:text-purple-200">
+                      <span className="text-xs font-medium text-secondary-foreground">
                         R{round}
                       </span>
                     </div>
                   ))}
                 {userStat.rounds_won_list && userStat.rounds_won_list.length > 12 && (
-                  <div className="flex items-center justify-center text-xs text-purple-600 dark:text-purple-400 col-span-2">
+                  <div className="flex items-center justify-center text-xs text-secondary col-span-2">
                     +{userStat.rounds_won_list.length - 12} mais
                   </div>
                 )}
@@ -269,7 +269,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
     return (
       <React.Fragment key={userStat.user_id}>
-        <tr className={`border dark:border-gray-700 transition-all duration-200 ${getRowClass(userStat.user_id, position)}`}>
+        <tr className={`border dark:border-border transition-all duration-200 ${getRowClass(userStat.user_id, position)}`}>
           <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
             <div className="flex items-center">
               {getMedalIcon(position)}
@@ -277,21 +277,21 @@ export const RankingTable: React.FC<RankingTableProps> = ({
           </td>
           <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
             <div className="flex items-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-primary-foreground font-bold shadow-md">
                 {userStat.user.name.charAt(0).toUpperCase()}
               </div>
               <div className="ml-3 sm:ml-4">
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  <span className="text-sm font-medium text-card-foreground">
                     {userStat.user.name}
                   </span>
                   {userStat.user_id === currentUserId && (
-                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full">
+                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">
                       Você
                     </span>
                   )}
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="text-sm text-muted-foreground">
                   {userStat.user.email}
                 </div>
               </div>
@@ -299,9 +299,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({
           </td>
           <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center">
             <div className="flex items-center justify-center">
-              <div className="flex items-center space-x-1 bg-yellow-100 dark:bg-yellow-900/50 rounded-full px-3 py-1">
-                <Trophy className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
-                <span className="text-sm font-bold text-yellow-800 dark:text-yellow-200">
+              <div className="flex items-center space-x-1 bg-warning/10 rounded-full px-3 py-1">
+                <Trophy className="w-4 h-4 text-warning" />
+                <span className="text-sm font-bold text-warning-foreground">
                   {userStat.total_points}
                 </span>
               </div>
@@ -309,9 +309,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({
           </td>
           <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center">
             <div className="flex items-center justify-center">
-              <div className="flex items-center space-x-1 bg-green-100 dark:bg-green-900/50 rounded-full px-3 py-1">
-                <Target className="w-4 h-4 text-green-600 dark:text-green-400" />
-                <span className="text-sm font-medium text-green-800 dark:text-green-200">
+              <div className="flex items-center space-x-1 bg-success/10 rounded-full px-3 py-1">
+                <Target className="w-4 h-4 text-success" />
+                <span className="text-sm font-medium text-success-foreground">
                   {userStat.exact_scores}
                 </span>
               </div>
@@ -322,22 +322,22 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center hidden lg:table-cell">
               <div className="flex items-center justify-center">
                 <div
-                  className={`flex items-center space-x-1 bg-purple-100 dark:bg-purple-900/50 rounded-full px-3 py-1 ${
+                  className={`flex items-center space-x-1 bg-secondary/10 rounded-full px-3 py-1 ${
                     userStat.rounds_won > 0
-                      ? 'cursor-pointer hover:bg-purple-200 dark:hover:bg-purple-800/50 transition-colors'
+                      ? 'cursor-pointer hover:bg-secondary/20 transition-colors'
                       : ''
                   }`}
                   onClick={() => userStat.rounds_won > 0 && toggleRowExpansion(userStat.user_id)} // Só permite clique se houver rodadas vencidas
                 >
-                  <Crown className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                  <span className="text-sm font-medium text-purple-800 dark:text-purple-200">
+                  <Crown className="w-4 h-4 text-secondary" />
+                  <span className="text-sm font-medium text-secondary-foreground">
                     {userStat.rounds_won || 0} / {userStat.rounds_tied || 0}
                   </span>
                   {userStat.rounds_won > 0 && (
                     expandedRows.has(userStat.user_id) ? (
-                      <ChevronUp className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                      <ChevronUp className="w-3 h-3 text-secondary" />
                     ) : (
-                      <ChevronDown className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                      <ChevronDown className="w-3 h-3 text-secondary" />
                     )
                   )}
                 </div>
@@ -345,7 +345,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             </td>
           )}
           <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center hidden md:table-cell">
-            <span className="text-sm font-medium text-gray-900 dark:text-white">
+            <span className="text-sm font-medium text-card-foreground">
               {userStat.total_bets}
             </span>
           </td>
@@ -357,12 +357,12 @@ export const RankingTable: React.FC<RankingTableProps> = ({
         </tr>
         {/* Expanded Details Row - Desktop - Apenas visível em 'todas as rodadas' */}
         {selectedRound === 'all' && expandedRows.has(userStat.user_id) && userStat.rounds_won > 0 && (
-          <tr className="bg-purple-50 dark:bg-purple-900/30 border-l-4 border-purple-200 dark:border-purple-700">
+          <tr className="bg-secondary/10 border-l-4 border-secondary/20">
             <td colSpan={selectedRound === 'all' ? 7 : 6} className="px-4 sm:px-6 py-4">
               <div className="flex flex-col space-y-3">
                 <div className="flex items-center space-x-2">
-                  <Crown className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                  <span className="font-semibold text-purple-800 dark:text-purple-200">
+                  <Crown className="w-5 h-5 text-secondary" />
+                  <span className="font-semibold text-secondary-foreground">
                     Rodadas vencidas por {userStat.user.name}:
                   </span>
                 </div>
@@ -371,16 +371,16 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     userStat.rounds_won_list.map((round) => (
                       <div
                         key={round}
-                        className="flex items-center justify-center bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 rounded-lg px-3 py-2 transition-colors cursor-pointer"
+                        className="flex items-center justify-center bg-secondary/20 hover:bg-secondary/30 rounded-lg px-3 py-2 transition-colors cursor-pointer"
                         title={`Rodada ${round} - Clique para ver detalhes`}
                       >
-                        <span className="text-sm font-medium text-purple-800 dark:text-purple-200">
+                        <span className="text-sm font-medium text-secondary-foreground">
                           R{round}
                         </span>
                       </div>
                     ))}
                 </div>
-                <div className="text-xs text-purple-600 dark:text-purple-400 flex items-center space-x-1">
+                <div className="text-xs text-secondary flex items-center space-x-1">
                   <Info className="w-4 h-4" />
                   <span>
                     Total: {userStat.rounds_won} rodada{userStat.rounds_won !== 1 ? 's' : ''} vencida{userStat.rounds_won !== 1 ? 's' : ''}
@@ -412,27 +412,27 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       {
         medal: 'gold',
         players: goldPlayers,
-        medalClass: 'bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600'
+        medalClass: 'bg-gradient-to-r from-warning to-warning/80'
       },
       {
         medal: 'silver',
         players: silverPlayers,
-        medalClass: 'bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700'
+        medalClass: 'bg-gradient-to-r from-secondary to-secondary/80'
       },
       {
         medal: 'bronze',
         players: bronzePlayers,
-        medalClass: 'bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700'
+        medalClass: 'bg-gradient-to-r from-warning to-warning/80'
       }
     ];
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-card rounded-xl shadow-lg overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-4 md:px-6 py-4">
+      <div className="bg-primary px-4 md:px-6 py-4">
         <div className="flex flex-col space-y-4">
-          <h2 className="text-xl md:text-2xl font-bold text-white flex items-center space-x-2">
+          <h2 className="text-xl md:text-2xl font-bold text-primary-foreground flex items-center space-x-2">
             <Trophy className="w-5 h-5 md:w-6 md:h-6" />
             <span>Ranking de Jogadores</span>
           </h2>
@@ -441,11 +441,11 @@ export const RankingTable: React.FC<RankingTableProps> = ({
           <div className="flex flex-col space-y-3">
             {/* Search Bar - Full width on mobile */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/70" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-primary-foreground/70" />
               <input
                 type="text"
                 placeholder="Buscar jogador..."
-                className="w-full pl-10 pr-4 py-2.5 text-sm bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/25 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 text-sm bg-primary-foreground/20 backdrop-blur-sm border border-primary-foreground/30 rounded-lg text-primary-foreground placeholder-primary-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary-foreground/50 focus:bg-primary-foreground/25 transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -458,8 +458,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                 onClick={() => setShowTopOnly(!showTopOnly)}
                 className={`flex items-center justify-center space-x-2 px-4 py-2 text-sm rounded-lg transition-all ${
                   showTopOnly
-                    ? 'bg-white/30 text-white shadow-md'
-                    : 'bg-white/10 text-white/80 hover:bg-white/20'
+                    ? 'bg-primary-foreground/30 text-primary-foreground shadow-md'
+                    : 'bg-primary-foreground/10 text-primary-foreground/80 hover:bg-primary-foreground/20'
                 }`}
               >
                 <Filter className="w-4 h-4" />
@@ -481,8 +481,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       </div>
 
       {/* Results Summary */}
-      <div className="px-4 md:px-6 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-        <p className="text-sm text-gray-600 dark:text-gray-300">
+      <div className="px-4 md:px-6 py-3 bg-muted border-b border-border">
+        <p className="text-sm text-muted-foreground">
           Mostrando {filteredRanking.length} de {ranking.length} jogadores
           {searchTerm && ` para "${searchTerm}"`}
           {showTopOnly && ' (Top 10)'}
@@ -491,58 +491,58 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
               {/* Top 3 Podium - Desktop only */}
       {sortedRanking.length >= 1 && !isMobile && !sortedRanking.every(p => p.total_points === 0) && (
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 px-4 py-6 sm:px-6">
+        <div className="bg-gradient-to-br from-muted to-background px-4 py-6 sm:px-6">
           {sortedRanking.every(player => player.total_points === 0) ? (
             // All zero points: neutral podium - show first 3 players
             <div className="flex justify-center items-end space-x-4 sm:space-x-8">
               {/* 2nd Place (Left) */}
               {sortedRanking[1] && (
                 <div key={sortedRanking[1].user_id} className="flex flex-col items-center">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center mb-2 shadow-lg">
-                    <span className="text-base sm:text-lg font-bold text-gray-600 dark:text-gray-200">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                    <span className="text-base sm:text-lg font-bold text-muted-foreground">
                       {sortedRanking[1].user.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="text-center">
-                    <p className="font-semibold text-xs sm:text-sm text-gray-800 dark:text-white truncate max-w-[80px]">{sortedRanking[1].user.name}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{sortedRanking[1].total_points} pts</p>
+                    <p className="font-semibold text-xs sm:text-sm text-foreground truncate max-w-[80px]">{sortedRanking[1].user.name}</p>
+                    <p className="text-xs text-muted-foreground">{sortedRanking[1].total_points} pts</p>
                   </div>
-                  <div className="w-10 h-6 sm:w-12 sm:h-8 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-t-lg mt-2 flex items-center justify-center">
-                    <span className="text-gray-600 dark:text-gray-200 font-bold text-xs sm:text-sm">{sortedRanking[1].rank}°</span>
+                  <div className="w-10 h-6 sm:w-12 sm:h-8 bg-gradient-to-r from-muted to-muted/80 rounded-t-lg mt-2 flex items-center justify-center">
+                    <span className="text-muted-foreground font-bold text-xs sm:text-sm">{sortedRanking[1].rank}°</span>
                   </div>
                 </div>
               )}
               {/* 1st Place (Center, Larger) */}
               {sortedRanking[0] && (
                 <div key={sortedRanking[0].user_id} className="flex flex-col items-center">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center mb-3 shadow-xl border-2 border-gray-300 dark:border-gray-500">
-                    <span className="text-xl sm:text-2xl font-bold text-gray-600 dark:text-gray-200">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center mb-3 shadow-xl border-2 border-border">
+                    <span className="text-xl sm:text-2xl font-bold text-muted-foreground">
                       {sortedRanking[0].user.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="text-center">
-                    <p className="font-bold text-base sm:text-lg text-gray-900 dark:text-white truncate max-w-[100px]">{sortedRanking[0].user.name}</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{sortedRanking[0].total_points} pts</p>
+                    <p className="font-bold text-base sm:text-lg text-foreground truncate max-w-[100px]">{sortedRanking[0].user.name}</p>
+                    <p className="text-sm text-muted-foreground">{sortedRanking[0].total_points} pts</p>
                   </div>
-                  <div className="w-12 h-8 sm:w-16 sm:h-10 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-t-lg mt-3 flex items-center justify-center border border-gray-300 dark:border-gray-500">
-                    <span className="text-gray-600 dark:text-gray-200 font-bold text-sm sm:text-base">{sortedRanking[0].rank}°</span>
+                  <div className="w-12 h-8 sm:w-16 sm:h-10 bg-gradient-to-r from-muted to-muted/80 rounded-t-lg mt-3 flex items-center justify-center border border-border">
+                    <span className="text-muted-foreground font-bold text-sm sm:text-base">{sortedRanking[0].rank}°</span>
                   </div>
                 </div>
               )}
               {/* 3rd Place (Right) */}
               {sortedRanking[2] && (
                 <div key={sortedRanking[2].user_id} className="flex flex-col items-center">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center mb-2 shadow-lg">
-                    <span className="text-base sm:text-lg font-bold text-gray-600 dark:text-gray-200">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                    <span className="text-base sm:text-lg font-bold text-muted-foreground">
                       {sortedRanking[2].user.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="text-center">
-                    <p className="font-semibold text-xs sm:text-sm text-gray-800 dark:text-white truncate max-w-[80px]">{sortedRanking[2].user.name}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{sortedRanking[2].total_points} pts</p>
+                    <p className="font-semibold text-xs sm:text-sm text-foreground truncate max-w-[80px]">{sortedRanking[2].user.name}</p>
+                    <p className="text-xs text-muted-foreground">{sortedRanking[2].total_points} pts</p>
                   </div>
-                  <div className="w-10 h-6 sm:w-12 sm:h-8 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-t-lg mt-2 flex items-center justify-center">
-                    <span className="text-gray-600 dark:text-gray-200 font-bold text-xs sm:text-sm">{sortedRanking[2].rank}°</span>
+                  <div className="w-10 h-6 sm:w-12 sm:h-8 bg-gradient-to-r from-muted to-muted/80 rounded-t-lg mt-2 flex items-center justify-center">
+                    <span className="text-muted-foreground font-bold text-xs sm:text-sm">{sortedRanking[2].rank}°</span>
                   </div>
                 </div>
               )}
@@ -612,9 +612,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
                 // Return in visual order: Silver (Left), Gold (Center), Bronze (Right)
                 return [
-                  { players: silverPlayers, type: 'left', label: '2º', medalClass: "bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700" },
-                  { players: goldPlayers, type: 'center', label: '1º', medalClass: "bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600" },
-                  { players: bronzePlayers, type: 'right', label: '3º', medalClass: "bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700" }
+                  { players: silverPlayers, type: 'left', label: '2º', medalClass: "bg-gradient-to-r from-secondary to-secondary/80" },
+                  { players: goldPlayers, type: 'center', label: '1º', medalClass: "bg-gradient-to-r from-warning to-warning/80" },
+                  { players: bronzePlayers, type: 'right', label: '3º', medalClass: "bg-gradient-to-r from-warning to-warning/80" }
                 ];
               })();
 
@@ -628,21 +628,21 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                           <div key={label} className="flex flex-col items-center opacity-50">
                             {type === 'center' ? (
                               // Placeholder for 1st Place (Larger)
-                              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mb-3 shadow-xl border border-dashed border-gray-400 dark:border-gray-500">
-                                <span className="text-xl sm:text-2xl font-bold text-gray-400 dark:text-gray-500">-</span>
+                              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-muted rounded-full flex items-center justify-center mb-3 shadow-xl border border-dashed border-border">
+                                <span className="text-xl sm:text-2xl font-bold text-muted-foreground">-</span>
                               </div>
                             ) : (
                               // Placeholder for 2nd/3rd Place (Smaller)
-                              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mb-2 shadow-lg border border-dashed border-gray-400 dark:border-gray-500">
-                                <span className="text-base sm:text-lg font-bold text-gray-400 dark:text-gray-500">-</span>
+                              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-muted rounded-full flex items-center justify-center mb-2 shadow-lg border border-dashed border-border">
+                                <span className="text-base sm:text-lg font-bold text-muted-foreground">-</span>
                               </div>
                             )}
                             <div className="text-center">
-                              <p className="font-semibold text-xs sm:text-sm text-gray-500 dark:text-gray-400">Sem Jogador</p>
-                              <p className="text-xs text-gray-400 dark:text-gray-500">0 pts</p>
+                              <p className="font-semibold text-xs sm:text-sm text-muted-foreground">Sem Jogador</p>
+                              <p className="text-xs text-muted-foreground">0 pts</p>
                             </div>
-                            <div className={`w-10 h-6 sm:w-12 sm:h-8 ${type === 'center' ? 'w-12 h-8 sm:w-16 sm:h-10' : ''} bg-gray-200 dark:bg-gray-700 rounded-t-lg mt-2 flex items-center justify-center border border-dashed border-gray-400 dark:border-gray-500`}>
-                              <span className="text-gray-400 dark:text-gray-500 font-bold text-xs sm:text-sm">{label}</span>
+                            <div className={`w-10 h-6 sm:w-12 sm:h-8 ${type === 'center' ? 'w-12 h-8 sm:w-16 sm:h-10' : ''} bg-muted rounded-t-lg mt-2 flex items-center justify-center border border-dashed border-border`}>
+                              <span className="text-muted-foreground font-bold text-xs sm:text-sm">{label}</span>
                             </div>
                           </div>
                         );
@@ -653,15 +653,15 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         const player = players[0];
                         let medalClass, medalSizeClass, textSizeClass;
                         if (type === 'center') { // 1st Place
-                          medalClass = "bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600";
+                          medalClass = "bg-gradient-to-r from-warning to-warning/80";
                           medalSizeClass = "w-20 h-20 sm:w-24 sm:h-24";
                           textSizeClass = "text-xl sm:text-2xl";
                         } else if (type === 'left') { // 2nd Place
-                          medalClass = "bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700";
+                          medalClass = "bg-gradient-to-r from-secondary to-secondary/80";
                           medalSizeClass = "w-14 h-14 sm:w-16 sm:h-16";
                           textSizeClass = "text-base sm:text-lg";
                         } else { // 3rd Place
-                          medalClass = "bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700";
+                          medalClass = "bg-gradient-to-r from-warning to-warning/80";
                           medalSizeClass = "w-14 h-14 sm:w-16 sm:h-16";
                           textSizeClass = "text-base sm:text-lg";
                         }
@@ -669,25 +669,25 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         return (
                           <div key={`${label}-${player.user_id}`} className="flex flex-col items-center">
                             <div className={`${medalClass} ${medalSizeClass} rounded-full flex items-center justify-center shadow-lg relative mb-2 sm:mb-3`}>
-                              <span className={`font-bold text-white ${textSizeClass}`}>
+                              <span className={`font-bold text-warning-foreground ${textSizeClass}`}>
                                 {player.user.name.charAt(0).toUpperCase()}
                               </span>
                               {type === 'center' && (
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-300 dark:bg-yellow-400 rounded-full flex items-center justify-center">
-                                  <Crown className="w-4 h-4 text-yellow-600 dark:text-yellow-700" />
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-warning/50 rounded-full flex items-center justify-center">
+                                  <Crown className="w-4 h-4 text-warning" />
                                 </div>
                               )}
                             </div>
                             <div className="text-center">
-                              <p className={`font-${type === 'center' ? 'bold' : 'semibold'} text-xs sm:text-sm text-gray-800 dark:text-white truncate max-w-[80px] sm:max-w-[100px]`}>
+                              <p className={`font-${type === 'center' ? 'bold' : 'semibold'} text-xs sm:text-sm text-foreground truncate max-w-[80px] sm:max-w-[100px]`}>
                                 {player.user.name}
                               </p>
-                              <p className={`text-xs ${type === 'center' ? 'text-sm' : 'text-xs'} text-gray-600 dark:text-gray-400`}>
+                              <p className={`text-xs ${type === 'center' ? 'text-sm' : 'text-xs'} text-muted-foreground`}>
                                 {player.total_points} pts
                               </p>
                             </div>
                             <div className={`${medalClass} ${type === 'center' ? 'w-12 h-8 sm:w-16 sm:h-10 mt-3' : 'w-10 h-6 sm:w-12 sm:h-8 mt-2'} rounded-t-lg flex items-center justify-center`}>
-                              <span className="text-white font-bold text-xs sm:text-sm">
+                              <span className="text-warning-foreground font-bold text-xs sm:text-sm">
                                 {label}
                               </span>
                             </div>
@@ -698,17 +698,17 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         // Display stacked avatars for ties
                         let medalClass, medalSizeClass, textSizeClass, baseSizeClass;
                         if (type === 'center') { // 1st Place
-                          medalClass = "bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600";
+                          medalClass = "bg-gradient-to-r from-warning to-warning/80";
                           medalSizeClass = "w-16 h-16 sm:w-20 sm:h-20";
                           textSizeClass = "text-lg sm:text-xl";
                           baseSizeClass = "w-12 h-8 sm:w-16 sm:h-10";
                         } else if (type === 'left') { // 2nd Place
-                          medalClass = "bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700";
+                          medalClass = "bg-gradient-to-r from-secondary to-secondary/80";
                           medalSizeClass = "w-14 h-14 sm:w-16 sm:h-16";
                           textSizeClass = "text-base sm:text-lg";
                           baseSizeClass = "w-10 h-6 sm:w-12 sm:h-8";
                         } else { // 3rd Place
-                          medalClass = "bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700";
+                          medalClass = "bg-gradient-to-r from-warning to-warning/80";
                           medalSizeClass = "w-14 h-14 sm:w-16 sm:h-16";
                           textSizeClass = "text-base sm:text-lg";
                           baseSizeClass = "w-10 h-6 sm:w-12 sm:h-8";
@@ -720,7 +720,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                               {players.slice(0, 3).map((player, playerIndex) => (
                                 <div
                                   key={player.user_id}
-                                  className={`${medalClass} ${medalSizeClass} rounded-full flex items-center justify-center shadow-lg border-2 border-white dark:border-gray-800`}
+                                  className={`${medalClass} ${medalSizeClass} rounded-full flex items-center justify-center shadow-lg border-2 border-card`}
                                   style={{
                                     position: playerIndex === 0 ? 'relative' : 'absolute',
                                     left: playerIndex === 0 ? 0 : `${playerIndex * 12}px`,
@@ -729,32 +729,32 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                                   }}
                                   title={player.user.name}
                                 >
-                                  <span className={`font-bold text-white ${textSizeClass}`}>
+                                  <span className={`font-bold text-warning-foreground ${textSizeClass}`}>
                                     {player.user.name.charAt(0).toUpperCase()}
                                   </span>
                                 </div>
                               ))}
                               {type === 'center' && (
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-300 dark:bg-yellow-400 rounded-full flex items-center justify-center z-20">
-                                  <Crown className="w-4 h-4 text-yellow-600 dark:text-yellow-700" />
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-warning/50 rounded-full flex items-center justify-center z-20">
+                                  <Crown className="w-4 h-4 text-warning" />
                                 </div>
                               )}
                               {players.length > 3 && (
-                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gray-500 dark:bg-gray-600 rounded-full flex items-center justify-center text-xs text-white font-bold z-20">
+                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-muted rounded-full flex items-center justify-center text-xs text-muted-foreground font-bold z-20">
                                   +{players.length - 3}
                                 </div>
                               )}
                             </div>
                             <div className="text-center">
-                              <p className={`font-${type === 'center' ? 'bold' : 'semibold'} text-xs sm:text-sm text-gray-800 dark:text-white`}>
+                              <p className={`font-${type === 'center' ? 'bold' : 'semibold'} text-xs sm:text-sm text-foreground`}>
                                 {players.length} empat{players.length > 1 ? 'ados' : 'ado'}
                               </p>
-                              <p className={`text-xs ${type === 'center' ? 'text-sm' : 'text-xs'} text-gray-600 dark:text-gray-400`}>
+                              <p className={`text-xs ${type === 'center' ? 'text-sm' : 'text-xs'} text-muted-foreground`}>
                                 {players[0].total_points} pts
                               </p>
                             </div>
                             <div className={`${medalClass} ${baseSizeClass} rounded-t-lg flex items-center justify-center`}>
-                              <span className="text-white font-bold text-xs sm:text-sm">
+                              <span className="text-warning-foreground font-bold text-xs sm:text-sm">
                                 {label}
                               </span>
                             </div>
@@ -772,7 +772,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
       {/* Mobile View - Compact List */}
       {isMobile ? (
-        <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="divide-y divide-border">
           {sortedRanking.map((userStat) => (
             <MobileCompactRow
               key={userStat.user_id}
@@ -785,34 +785,34 @@ export const RankingTable: React.FC<RankingTableProps> = ({
         /* Desktop View */
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700">
+            <thead className="bg-muted">
               <tr>
-                <th className="px-4 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Posição
                 </th>
-                <th className="px-4 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Jogador
                 </th>
-                <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Pontos
                 </th>
-                <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Placares Exatos
                 </th>
                 {selectedRound === 'all' && (
-                  <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
+                  <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider hidden lg:table-cell">
                     Rodadas Vencidas
                   </th>
                 )}
-                <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
+                <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider hidden md:table-cell">
                   Apostas
                 </th>
-                <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">
+                <th className="px-4 sm:px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider hidden sm:table-cell">
                   Aproveitamento
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="divide-y divide-border">
               {sortedRanking.map((userStat) => (
                 <DesktopRow
                   key={userStat.user_id}
@@ -828,13 +828,13 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       {/* Empty State */}
       {filteredRanking.length === 0 && (
         <div className="text-center py-16 px-4">
-          <div className="w-20 h-20 bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
-            <BarChart3 className="w-10 h-10 text-white" />
+          <div className="w-20 h-20 bg-gradient-to-r from-muted to-muted/80 rounded-full flex items-center justify-center mx-auto mb-6">
+            <BarChart3 className="w-10 h-10 text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-700 dark:text-white mb-2">
+          <h3 className="text-xl font-semibold text-foreground mb-2">
             Nenhum ranking disponível
           </h3>
-          <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+          <p className="text-muted-foreground max-w-md mx-auto">
             Faça suas apostas para aparecer no ranking e competir com outros jogadores!
           </p>
         </div>

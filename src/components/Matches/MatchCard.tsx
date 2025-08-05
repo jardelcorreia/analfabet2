@@ -90,15 +90,15 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'scheduled':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-secondary text-secondary-foreground';
       case 'live':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success text-success-foreground';
       case 'finished':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground';
       case 'postponed':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning text-warning-foreground';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground';
     }
   };
 
@@ -118,12 +118,12 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
+    <div className="bg-card rounded-lg shadow-md p-4 sm:p-6 border border-border">
       {/* Header with date and status - improved mobile layout */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-4">
         <div className="flex items-center space-x-2">
-          <Calendar className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
-          <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+          <Calendar className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <span className="text-xs sm:text-sm text-muted-foreground">
             {format(new Date(match.match_date), 'dd/MM/yyyy - HH:mm', { locale: ptBR })}
           </span>
         </div>
@@ -140,18 +140,18 @@ export const MatchCard: React.FC<MatchCardProps> = ({
             alt={match.home_team}
             className="w-12 h-12 mx-auto mb-2"
           />
-          <h3 className="font-semibold text-gray-800 dark:text-white mb-1 text-sm sm:text-base truncate px-1">
+          <h3 className="font-semibold text-card-foreground mb-1 text-sm sm:text-base truncate px-1">
             {timesInfo[match.home_team]?.nome || match.home_team}
           </h3>
         </div>
 
         <div className="flex-shrink-0 mx-2 sm:mx-4">
           {(match.status === 'finished' || match.status === 'live') && match.home_score !== null && match.away_score !== null ? (
-            <div className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">
+            <div className="text-xl sm:text-2xl font-bold text-card-foreground">
               {match.home_score} - {match.away_score}
             </div>
           ) : (
-            <div className="text-xl sm:text-2xl font-bold text-gray-400 dark:text-gray-500">
+            <div className="text-xl sm:text-2xl font-bold text-muted-foreground">
               - : -
             </div>
           )}
@@ -163,7 +163,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
             alt={match.away_team}
             className="w-12 h-12 mx-auto mb-2"
           />
-          <h3 className="font-semibold text-gray-800 dark:text-white mb-1 text-sm sm:text-base truncate px-1">
+          <h3 className="font-semibold text-card-foreground mb-1 text-sm sm:text-base truncate px-1">
             {timesInfo[match.away_team]?.nome || match.away_team}
           </h3>
         </div>
@@ -171,29 +171,29 @@ export const MatchCard: React.FC<MatchCardProps> = ({
 
       {/* User bet section - improved mobile layout */}
       {userBet && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4 mb-4">
+        <div className="bg-muted rounded-lg p-3 sm:p-4 mb-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
             <div className="flex items-center space-x-2">
-              <Target className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+              <Target className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
+              <span className="text-sm font-medium text-foreground">
                 Sua aposta: {userBet.home_score} - {userBet.away_score}
               </span>
             </div>
             {(match.status === 'finished' || match.status === 'live') && userBet.points !== null && (
               <div className="flex items-center space-x-2 ml-6 sm:ml-0">
-                <Trophy className="w-4 h-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                <Trophy className="w-4 h-4 text-warning-foreground flex-shrink-0" />
+                <span className="text-sm font-medium text-foreground">
                   {userBet.points} pontos
                 </span>
                 {userBet.is_exact && (
-                  <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-2 py-1 rounded">
+                  <span className="text-xs bg-success/10 text-success px-2 py-1 rounded">
                     Exato!
                   </span>
                 )}
               </div>
             )}
             {(match.status === 'finished' || match.status === 'live') && userBet.points === null && (
-              <span className="text-xs text-gray-500 dark:text-gray-400 ml-6 sm:ml-0">Calculando pontos...</span>
+              <span className="text-xs text-muted-foreground ml-6 sm:ml-0">Calculando pontos...</span>
             )}
           </div>
         </div>
@@ -204,7 +204,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         <div className="space-y-3">
           {/* Show time until betting deadline */}
           {getTimeUntilDeadline() && (
-            <div className="text-center text-xs text-gray-500 dark:text-gray-400 bg-yellow-50 dark:bg-yellow-900 py-2 px-2 rounded">
+            <div className="text-center text-xs text-muted-foreground bg-warning/10 py-2 px-2 rounded">
               <div className="break-words">
                 {getTimeUntilDeadline()}
               </div>
@@ -218,7 +218,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
                 setAwayScore(userBet?.away_score ?? null);
                 setShowBetForm(true);
               }}
-              className="w-full px-4 py-2 sm:py-3 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-lg font-medium transition-colors text-sm sm:text-base"
+              className="w-full px-4 py-2 sm:py-3 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-medium transition-colors text-sm sm:text-base"
             >
               {userBet ? 'Alterar Aposta' : 'Fazer Aposta'}
             </button>
@@ -227,7 +227,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
               {/* Betting form - improved mobile layout */}
               <div className="flex items-center justify-center space-x-2 sm:space-x-4">
                 <div className="text-center flex-1">
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-xs sm:text-sm font-medium text-muted-foreground mb-1">
                     <span className="truncate block max-w-full">
                       {timesInfo[match.home_team]?.abrev || match.home_team}
                     </span>
@@ -244,13 +244,13 @@ export const MatchCard: React.FC<MatchCardProps> = ({
                         awayScoreInputRef.current?.focus();
                       }
                     }}
-                    className="w-12 sm:w-16 px-1 sm:px-2 py-1 sm:py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded text-center text-sm sm:text-base"
+                    className="w-12 sm:w-16 px-1 sm:px-2 py-1 sm:py-2 bg-background text-foreground border border-input rounded text-center text-sm sm:text-base"
                     required
                   />
                 </div>
-                <span className="text-lg sm:text-xl font-bold text-gray-500 dark:text-gray-400 flex-shrink-0">×</span>
+                <span className="text-lg sm:text-xl font-bold text-muted-foreground flex-shrink-0">×</span>
                 <div className="text-center flex-1">
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-xs sm:text-sm font-medium text-muted-foreground mb-1">
                     <span className="truncate block max-w-full">
                       {timesInfo[match.away_team]?.abrev || match.away_team}
                     </span>
@@ -265,7 +265,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
                       setAwayScore(value === '' ? null : Number(value));
                     }}
                     ref={awayScoreInputRef}
-                    className="w-12 sm:w-16 px-1 sm:px-2 py-1 sm:py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded text-center text-sm sm:text-base"
+                    className="w-12 sm:w-16 px-1 sm:px-2 py-1 sm:py-2 bg-background text-foreground border border-input rounded text-center text-sm sm:text-base"
                     required
                   />
                 </div>
@@ -276,14 +276,14 @@ export const MatchCard: React.FC<MatchCardProps> = ({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 px-4 py-2 sm:py-3 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-lg disabled:opacity-50 text-sm sm:text-base font-medium"
+                  className="flex-1 px-4 py-2 sm:py-3 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg disabled:opacity-50 text-sm sm:text-base font-medium"
                 >
                   {loading ? 'Salvando...' : 'Confirmar'}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowBetForm(false)}
-                  className="flex-1 px-4 py-2 sm:py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-sm sm:text-base font-medium"
+                  className="flex-1 px-4 py-2 sm:py-3 bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-lg text-sm sm:text-base font-medium"
                 >
                   Cancelar
                 </button>
@@ -295,28 +295,28 @@ export const MatchCard: React.FC<MatchCardProps> = ({
 
       {/* Status messages - improved mobile layout */}
       {canBet && match.status === 'scheduled' && !isBettingAllowed() && (
-        <div className="text-center text-xs sm:text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900 py-2 px-4 rounded-lg">
+        <div className="text-center text-xs sm:text-sm text-destructive bg-destructive/10 py-2 px-4 rounded-lg">
           <Clock className="w-4 h-4 inline mr-1" />
           <span className="break-words">Prazo para apostas encerrado</span>
         </div>
       )}
 
       {match.status === 'finished' && (
-        <div className="text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-4">
+        <div className="text-center text-xs sm:text-sm text-muted-foreground mt-4">
           <Clock className="w-4 h-4 inline mr-1" />
           Jogo finalizado
         </div>
       )}
 
       {match.status === 'live' && (
-        <div className="text-center text-xs sm:text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900 py-2 px-4 rounded-lg">
+        <div className="text-center text-xs sm:text-sm text-success bg-success/10 py-2 px-4 rounded-lg">
           <Clock className="w-4 h-4 inline mr-1" />
           Jogo em andamento
         </div>
       )}
 
       {match.status === 'postponed' && (
-        <div className="text-center text-xs sm:text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900 py-2 px-4 rounded-lg">
+        <div className="text-center text-xs sm:text-sm text-warning bg-warning/10 py-2 px-4 rounded-lg">
           <Clock className="w-4 h-4 inline mr-1" />
           Jogo adiado
         </div>

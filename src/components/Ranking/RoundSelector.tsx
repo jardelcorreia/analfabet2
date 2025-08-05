@@ -20,8 +20,8 @@ const roundSelectorStyles = cva(
 const labelStyles = cva('text-sm font-medium whitespace-nowrap', {
   variants: {
     variant: {
-      default: 'text-gray-700 dark:text-gray-300',
-      onGradient: 'text-white/90',
+      default: 'text-muted-foreground',
+      onGradient: 'text-primary-foreground/90',
     },
   },
 });
@@ -32,9 +32,9 @@ const selectStyles = cva(
     variants: {
       variant: {
         default:
-          'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500 [color-scheme:light] dark:[color-scheme:dark]',
+          'bg-card text-card-foreground border border-input focus:ring-ring focus:border-transparent hover:border-input/80 [color-scheme:light] dark:[color-scheme:dark]',
         onGradient:
-          'bg-white/10 text-white border border-white/30 backdrop-blur-sm focus:ring-white/50 focus:border-white/50 hover:border-white/50',
+          'bg-primary-foreground/10 text-primary-foreground border border-primary-foreground/30 backdrop-blur-sm focus:ring-primary-foreground/50 focus:border-primary-foreground/50 hover:border-primary-foreground/50',
       },
     },
   }
@@ -43,8 +43,8 @@ const selectStyles = cva(
 const arrowStyles = cva('w-4 h-4', {
   variants: {
     variant: {
-      default: 'text-gray-400 dark:text-gray-300',
-      onGradient: 'text-white/70',
+      default: 'text-muted-foreground',
+      onGradient: 'text-primary-foreground/70',
     },
   },
 });
@@ -86,11 +86,11 @@ export const RoundSelector: React.FC<RoundSelectorProps> = ({
           }}
           className={selectStyles({ variant })}
         >
-          <option value="all" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+          <option value="all" className="bg-card text-card-foreground">
             🏆 Todas as rodadas
           </option>
           {rounds.map((round) => (
-            <option key={round} value={round} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+            <option key={round} value={round} className="bg-card text-card-foreground">
               ⚽ Rodada {round}
             </option>
           ))}
@@ -101,7 +101,7 @@ export const RoundSelector: React.FC<RoundSelectorProps> = ({
       </div>
       {variant === 'default' && (
         <div className="sm:hidden">
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             {selectedRound === 'all' ? 'Visualizando todas as rodadas' : 
              selectedRound ? `Visualizando rodada ${selectedRound}` : 'Visualizando rodada atual'}
           </p>

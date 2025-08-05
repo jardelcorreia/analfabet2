@@ -100,7 +100,7 @@ export const MatchList: React.FC<MatchListProps> = ({
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -108,7 +108,7 @@ export const MatchList: React.FC<MatchListProps> = ({
   if (error) {
     return (
       <div className="text-center py-12 px-4">
-        <p className="text-red-600 dark:text-red-400 text-sm sm:text-base">Erro ao carregar jogos: {error}</p>
+        <p className="text-destructive text-sm sm:text-base">Erro ao carregar jogos: {error}</p>
       </div>
     );
   }
@@ -116,11 +116,11 @@ export const MatchList: React.FC<MatchListProps> = ({
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header with improved mobile layout */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-800 dark:to-emerald-900 rounded-lg p-4 mb-4 text-white">
+      <div className="bg-primary rounded-lg p-4 mb-4 text-primary-foreground">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold">Jogos</h1>
-            <p className="text-green-100 text-sm">Faça suas apostas</p>
+            <p className="text-primary-foreground/80 text-sm">Faça suas apostas</p>
           </div>
           <div className="w-full sm:w-auto">
             <RoundSelector
@@ -152,12 +152,12 @@ export const MatchList: React.FC<MatchListProps> = ({
 
       {/* Empty state with responsive design */}
       {matches.length === 0 && (
-        <div className="text-center py-8 sm:py-12 bg-gray-50 dark:bg-gray-800 rounded-lg mx-4 sm:mx-0">
-          <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-          <h3 className="text-base sm:text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">
+        <div className="text-center py-8 sm:py-12 bg-muted rounded-lg mx-4 sm:mx-0">
+          <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-base sm:text-lg font-semibold text-muted-foreground mb-2">
             Nenhum jogo encontrado
           </h3>
-          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 px-4">
+          <p className="text-sm sm:text-base text-muted-foreground px-4">
             {selectedRound ? `Não há jogos para a ${selectedRound}ª rodada` : 'Não há jogos disponíveis'}
           </p>
         </div>

@@ -121,12 +121,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
     return (
       <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4" style={{ backgroundImage: `url(${heroImageUrl})` }}>
         <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 w-full max-w-sm text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-4">
-            <Mail className="w-8 h-8 text-green-600 dark:text-green-400" />
+        <div className="relative bg-card text-card-foreground rounded-3xl shadow-xl p-8 w-full max-w-sm text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+            <Mail className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Confirme seu email</h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <h1 className="text-2xl font-bold text-card-foreground mb-2">Confirme seu email</h1>
+          <p className="text-muted-foreground">
             Enviamos um email de confirmação para <strong>{email}</strong>. Por favor, verifique sua caixa de entrada e siga as instruções para ativar sua conta.
           </p>
         </div>
@@ -137,22 +137,22 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
   return (
     <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4" style={{ backgroundImage: `url(${heroImageUrl})` }}>
       <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 w-full max-w-sm">
+      <div className="relative bg-card text-card-foreground rounded-3xl shadow-xl p-8 w-full max-w-sm">
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-4">
-            <Trophy className="w-8 h-8 text-green-600 dark:text-green-400" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+            <Trophy className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">AnalfaBet</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
+          <h1 className="text-2xl font-bold text-card-foreground mb-1">AnalfaBet</h1>
+          <p className="text-muted-foreground text-sm">
             {isLogin ? 'Entre na sua conta' : 'Crie sua conta'}
           </p>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 dark:bg-red-900 text-red-600 dark:text-red-400 px-4 py-3 rounded-xl mb-6 text-sm text-center">
+          <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-xl mb-6 text-sm text-center">
             {error}
           </div>
         )}
@@ -161,16 +161,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
         <div className="space-y-4 mb-6">
           {isLogin ? (
             <div>
-              <label className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
+              <label className="block text-muted-foreground text-sm font-medium mb-2">
                 Email ou Nome
               </label>
               <div className="relative">
-                <LoginIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-500" />
+                <LoginIcon className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                 <input
                   type="text"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-background text-foreground border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent outline-none transition-all"
                   required
                 />
               </div>
@@ -178,16 +178,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
           ) : (
             <>
               <div>
-                <label className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
+                <label className="block text-muted-foreground text-sm font-medium mb-2">
                   Nome de Usuário
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-500" />
+                  <User className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 bg-background text-foreground border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent outline-none transition-all"
                     required
                     minLength={2}
                   />
@@ -195,16 +195,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
               </div>
 
               <div>
-                <label className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
+                <label className="block text-muted-foreground text-sm font-medium mb-2">
                   Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-500" />
+                  <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 bg-background text-foreground border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent outline-none transition-all"
                     required
                   />
                 </div>
@@ -213,23 +213,23 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
           )}
 
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
+            <label className="block text-muted-foreground text-sm font-medium mb-2">
               Senha
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-500" />
+              <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-12 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+                className="w-full pl-10 pr-12 py-3 bg-background text-foreground border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent outline-none transition-all"
                 required
                 minLength={6}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                className="absolute right-3 top-3 h-5 w-5 text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
@@ -244,9 +244,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
             type="checkbox"
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
-            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 dark:border-gray-600 rounded"
+            className="h-4 w-4 text-primary focus:ring-ring border-input rounded"
           />
-          <label htmlFor="remember" className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+          <label htmlFor="remember" className="ml-2 text-sm text-muted-foreground">
             Manter-me conectado
           </label>
         </div>
@@ -256,7 +256,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
           type="submit"
           disabled={loading}
           onClick={handleSubmit}
-          className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 mb-6"
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-3 px-4 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 mb-6"
         >
           {loading ? 'Carregando...' : isLogin ? 'Entrar' : 'Criar Conta'}
         </button>
@@ -265,7 +265,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSignIn, onSignUp }) => {
         <div className="text-center">
           <button
             onClick={handleModeSwitch}
-            className="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 text-sm font-medium transition-colors"
+            className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
           >
             {isLogin ? 'Não tem conta? Criar uma' : 'Já tem conta? Entrar'}
           </button>

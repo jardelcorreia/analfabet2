@@ -122,31 +122,31 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Perfil do Usuário</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">Gerencie suas informações de perfil e segurança.</p>
+        <h1 className="text-3xl font-bold text-foreground">Perfil do Usuário</h1>
+        <p className="text-muted-foreground mt-1">Gerencie suas informações de perfil e segurança.</p>
       </div>
 
       {/* User Information */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-card rounded-xl shadow-md border border-border p-6">
         <h2 className="text-xl font-semibold mb-4">Informações da Conta</h2>
         <div className="space-y-4">
           <div className="flex items-center space-x-3">
-            <User className="w-5 h-5 text-gray-500" />
+            <User className="w-5 h-5 text-muted-foreground" />
             <span className="font-medium">{username}</span>
           </div>
           <div className="flex items-center space-x-3">
-            <Mail className="w-5 h-5 text-gray-500" />
+            <Mail className="w-5 h-5 text-muted-foreground" />
             <span className="font-medium">{user.email}</span>
           </div>
         </div>
       </div>
 
       {/* Change Username */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-card rounded-xl shadow-md border border-border p-6">
         <h2 className="text-xl font-semibold mb-4">Alterar Nome de Usuário</h2>
         <form onSubmit={handleUpdateUsername} className="space-y-4">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="username" className="block text-sm font-medium text-muted-foreground mb-1">
               Novo nome de usuário
             </label>
             <input
@@ -154,12 +154,12 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-ring"
               required
             />
           </div>
           {usernameMessage && (
-            <div className={`flex items-center space-x-2 text-sm ${usernameMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+            <div className={`flex items-center space-x-2 text-sm ${usernameMessage.type === 'success' ? 'text-success' : 'text-destructive'}`}>
               {usernameMessage.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
               <span>{usernameMessage.text}</span>
             </div>
@@ -167,7 +167,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
           <button
             type="submit"
             disabled={usernameLoading}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
             {usernameLoading ? 'Salvando...' : 'Salvar Nome'}
           </button>
@@ -175,13 +175,13 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
       </div>
 
       {/* Change Password */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-card rounded-xl shadow-md border border-border p-6">
         <h2 className="text-xl font-semibold mb-4">Alterar Senha</h2>
         <form onSubmit={handleChangePassword} className="space-y-4">
           <div>
             <label
               htmlFor="currentPassword"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              className="block text-sm font-medium text-muted-foreground mb-1"
             >
               Senha Atual
             </label>
@@ -190,12 +190,12 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-ring"
               required
             />
           </div>
           <div>
-            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="newPassword" className="block text-sm font-medium text-muted-foreground mb-1">
               Nova Senha
             </label>
             <input
@@ -203,14 +203,14 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-ring"
               required
             />
           </div>
           <div>
             <label
               htmlFor="confirmNewPassword"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              className="block text-sm font-medium text-muted-foreground mb-1"
             >
               Confirmar Nova Senha
             </label>
@@ -219,12 +219,12 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
               type="password"
               value={confirmNewPassword}
               onChange={(e) => setConfirmNewPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-ring"
               required
             />
           </div>
           {passwordMessage && (
-            <div className={`flex items-center space-x-2 text-sm ${passwordMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+            <div className={`flex items-center space-x-2 text-sm ${passwordMessage.type === 'success' ? 'text-success' : 'text-destructive'}`}>
               {passwordMessage.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
               <span>{passwordMessage.text}</span>
             </div>
@@ -232,7 +232,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
           <button
             type="submit"
             disabled={passwordLoading}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
             {passwordLoading ? 'Alterando...' : 'Alterar Senha'}
           </button>
@@ -240,24 +240,24 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
       </div>
 
       {/* Close Account */}
-      <div className="bg-red-50 dark:bg-red-900/20 rounded-xl shadow-md border border-red-200 dark:border-red-700/50 p-6">
-        <h2 className="text-xl font-semibold mb-2 text-red-800 dark:text-red-200">Zona de Perigo</h2>
-        <p className="text-red-700 dark:text-red-300 mb-4">
+      <div className="bg-destructive/10 rounded-xl shadow-md border border-destructive/20 p-6">
+        <h2 className="text-xl font-semibold mb-2 text-destructive">Zona de Perigo</h2>
+        <p className="text-destructive mb-4">
           A exclusão da sua conta é uma ação permanente e não pode ser desfeita.
         </p>
         {!showDeleteConfirm && (
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors"
           >
             Fechar Conta
           </button>
         )}
         {showDeleteConfirm && (
-          <div className="bg-red-100 dark:bg-red-900/30 p-4 rounded-lg">
-            <p className="font-semibold mb-3 text-red-800 dark:text-red-200">Tem certeza que deseja continuar?</p>
+          <div className="bg-destructive/20 p-4 rounded-lg">
+            <p className="font-semibold mb-3 text-destructive">Tem certeza que deseja continuar?</p>
             {deleteMessage && (
-              <div className={`flex items-center space-x-2 text-sm mb-2 ${deleteMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+              <div className={`flex items-center space-x-2 text-sm mb-2 ${deleteMessage.type === 'success' ? 'text-success' : 'text-destructive'}`}>
                 {deleteMessage.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
                 <span>{deleteMessage.text}</span>
               </div>
@@ -266,13 +266,13 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
               <button
                 onClick={handleDeleteAccount}
                 disabled={deleteLoading}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 disabled:opacity-50"
               >
                 {deleteLoading ? 'Excluindo...' : 'Sim, excluir minha conta'}
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
+                className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90"
               >
                 Cancelar
               </button>
