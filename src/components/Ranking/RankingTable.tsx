@@ -92,7 +92,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       return (
         <div className="relative">
           <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
-            <Crown className="w-5 h-5 text-white" />
+            <Crown className="w-5 h-5 text-black" />
           </div>
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-pulse"></div>
         </div>
@@ -101,14 +101,14 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     if (rank === silverRank) {
       return (
         <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center shadow-md">
-          <Medal className="w-5 h-5 text-white" />
+          <Medal className="w-5 h-5 text-black" />
         </div>
       );
     }
     if (rank === bronzeRank) {
       return (
         <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center shadow-md">
-          <Medal className="w-5 h-5 text-white" />
+          <Medal className="w-5 h-5 text-black" />
         </div>
       );
     }
@@ -141,9 +141,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   };
 
   const getPositionBadge = (position: number) => {
-    if (position === 1) return 'bg-yellow-400 text-white';
-    if (position === 2) return 'bg-gray-400 text-white';
-    if (position === 3) return 'bg-yellow-600 text-white';
+    if (position === 1) return 'bg-yellow-400 text-black';
+    if (position === 2) return 'bg-gray-400 text-black';
+    if (position === 3) return 'bg-yellow-600 text-black';
     return 'bg-muted text-muted-foreground';
   };
 
@@ -184,7 +184,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             {/* Right: Points */}
             <div className="flex items-center space-x-1 bg-warning/10 rounded-full px-2 py-1 flex-shrink-0">
               <Trophy className="w-3 h-3 text-warning" />
-              <span className="text-sm font-bold text-warning-foreground">
+              <span className="text-sm font-bold text-yellow-800">
                 {userStat.total_points}
               </span>
             </div>
@@ -301,7 +301,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             <div className="flex items-center justify-center">
               <div className="flex items-center space-x-1 bg-warning/10 rounded-full px-3 py-1">
                 <Trophy className="w-4 h-4 text-warning" />
-                <span className="text-sm font-bold text-warning-foreground">
+                <span className="text-sm font-bold text-yellow-800">
                   {userStat.total_points}
                 </span>
               </div>
@@ -669,7 +669,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         return (
                           <div key={`${label}-${player.user_id}`} className="flex flex-col items-center">
                             <div className={`${medalClass} ${medalSizeClass} rounded-full flex items-center justify-center shadow-lg relative mb-2 sm:mb-3`}>
-                              <span className={`font-bold text-white ${textSizeClass}`}>
+                              <span className={`font-bold text-black ${textSizeClass}`}>
                                 {player.user.name.charAt(0).toUpperCase()}
                               </span>
                               {type === 'center' && (
@@ -687,7 +687,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                               </p>
                             </div>
                             <div className={`${medalClass} ${type === 'center' ? 'w-12 h-8 sm:w-16 sm:h-10 mt-3' : 'w-10 h-6 sm:w-12 sm:h-8 mt-2'} rounded-t-lg flex items-center justify-center`}>
-                              <span className="text-white font-bold text-xs sm:text-sm">
+                              <span className="text-black font-bold text-xs sm:text-sm">
                                 {label}
                               </span>
                             </div>
@@ -729,7 +729,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                                   }}
                                   title={player.user.name}
                                 >
-                                  <span className={`font-bold text-white ${textSizeClass}`}>
+                                  <span className={`font-bold text-black ${textSizeClass}`}>
                                     {player.user.name.charAt(0).toUpperCase()}
                                   </span>
                                 </div>
@@ -754,7 +754,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                               </p>
                             </div>
                             <div className={`${medalClass} ${baseSizeClass} rounded-t-lg flex items-center justify-center`}>
-                              <span className="text-white font-bold text-xs sm:text-sm">
+                              <span className="text-black font-bold text-xs sm:text-sm">
                                 {label}
                               </span>
                             </div>
