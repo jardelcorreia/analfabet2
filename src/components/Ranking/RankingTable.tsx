@@ -61,7 +61,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   let rank = 1;
   for (let i = 0; i < sortedRanking.length; i++) {
     if (i > 0 && sortedRanking[i].total_points < sortedRanking[i - 1].total_points) {
-      rank = i + 1;
+      rank++;
     }
     sortedRanking[i].rank = rank;
   }
