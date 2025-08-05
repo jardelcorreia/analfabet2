@@ -603,23 +603,6 @@ const dbHelpers = {
   async calculateDetailedRoundsWon(leagueId) {
     await sql`SELECT calculate_detailed_rounds_won_for_league(${leagueId})`;
   },
-
-  // Check if a round is mathematically defined
-  async isRoundMathematicallyDefined(leagueId, roundNumber) {
-    if (roundNumber === 'all' || roundNumber === null || roundNumber === undefined) {
-      return false;
-    }
-    try {
-      const result = await sql`
-        SELECT is_round_mathematically_defined(${leagueId}, ${roundNumber}) as is_defined
-      `;
-      return result[0]?.is_defined || false;
-    } catch (error) {
-      console.error('Error checking if round is mathematically defined:', error);
-      return false;
-    }
-  },
-
   async getUserStats(userId, leagueId) {
     const result = await sql`
       SELECT * FROM user_stats WHERE user_id = ${userId} AND league_id = ${leagueId}

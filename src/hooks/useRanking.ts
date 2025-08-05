@@ -6,7 +6,6 @@ export const useRanking = (leagueId: string, round?: number | 'all') => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [displayedRound, setDisplayedRound] = useState<number | undefined>();
-  const [isDefined, setIsDefined] = useState(false);
 
   const fetchRanking = useCallback(async (fetchForRound?: number | 'all') => {
     if (!leagueId) {
@@ -29,7 +28,6 @@ export const useRanking = (leagueId: string, round?: number | 'all') => {
       const data = await response.json();
       setRanking(data.ranking);
       setDisplayedRound(data.determinedRound);
-      setIsDefined(data.is_mathematically_defined);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -41,5 +39,5 @@ export const useRanking = (leagueId: string, round?: number | 'all') => {
     fetchRanking(round);
   }, [round, fetchRanking]);
 
-  return { ranking, loading, error, displayedRound, isDefined, refreshRanking: () => fetchRanking(round) };
+  return { ranking, loading, error, displayedRound, refreshRanking: () => fetchRanking(round) };
 };

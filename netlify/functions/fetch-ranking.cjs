@@ -24,22 +24,19 @@ exports.handler = async function(event, context) {
 
     const ranking = await dbHelpers.getLeagueRanking(leagueId, targetRound === 'all' ? null : targetRound);
     
-    // Always trigger rounds won calculation for the league when fetching ranking
-    try {
-      await dbHelpers.calculateDetailedRoundsWon(leagueId);
-    } catch (error) {
-      console.warn('Could not update rounds won:', error.message);
+    // If viewing all rounds, ensure rounds_won is calculated
+    if (targetRound === 'all') {
+      // Trigger rounds won calculation for this league if needed
+      try {
+        await dbHelpers.calculateDetailedRoundsWon(leagueId);
+      } catch (error) {
+        console.warn('Could not update rounds won:', error.message);
+      }
     }
-
-    const isDefined = await dbHelpers.isRoundMathematicallyDefined(leagueId, targetRound);
     
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        ranking,
-        determinedRound: targetRound,
-        is_mathematically_defined: isDefined,
-      }),
+      body: JSON.stringify({ ranking, determinedRound: targetRound }),
     };
   } catch (error) {
     console.error('Error fetching ranking:', error);

@@ -9,7 +9,6 @@ interface RankingTableProps {
   selectedRound: number | 'all' | undefined;
   onRoundChange: (round: number | 'all' | undefined) => void;
   totalRounds: number;
-  isDefined: boolean;
 }
 
 export const RankingTable: React.FC<RankingTableProps> = ({
@@ -18,7 +17,6 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   selectedRound,
   onRoundChange,
   totalRounds,
-  isDefined,
 }) => {
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
   const [isMobile, setIsMobile] = React.useState(false);
@@ -60,17 +58,13 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     return a.user.name.localeCompare(b.user.name);
   });
 
-  let lastPoints: number | null = null;
-  let lastRank = 0;
-  let nextRank = 1;
-  sortedRanking.forEach((user, idx) => {
-    if (user.total_points !== lastPoints) {
-      lastRank = nextRank;
+  let rank = 1;
+  for (let i = 0; i < sortedRanking.length; i++) {
+    if (i > 0 && sortedRanking[i].total_points < sortedRanking[i - 1].total_points) {
+      rank = i + 1;
     }
-    user.rank = lastRank;
-    lastPoints = user.total_points;
-    nextRank++;
-  });
+    sortedRanking[i].rank = rank;
+  }
 
   // --- Update getMedalIcon to use rank ---
   const getMedalIcon = (rank: number) => {
@@ -491,7 +485,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       </div>
 
               {/* Top 3 Podium - Desktop only */}
-      {isDefined && sortedRanking.length >= 1 && !isMobile && !sortedRanking.every(p => p.total_points === 0) && (
+      {sortedRanking.length >= 1 && !isMobile && !sortedRanking.every(p => p.total_points === 0) && (
         <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 px-4 py-6 sm:px-6">
           {sortedRanking.every(player => player.total_points === 0) ? (
             // All zero points: neutral podium - show first 3 players
