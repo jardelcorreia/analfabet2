@@ -170,39 +170,40 @@ export const MatchList: React.FC<MatchListProps> = ({
               {view === 'matches' ? 'Faça suas apostas' : 'Confira a tabela do campeonato'}
             </p>
           </div>
-          <div className="flex bg-primary-foreground/20 rounded-lg p-1">
-            <button
-              onClick={() => setView('matches')}
-              className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                view === 'matches' ? 'bg-primary-foreground text-primary' : 'text-primary-foreground/80'
-              }`}
-            >
-              <Calendar className="w-4 h-4 inline-block mr-2" />
-              Jogos
-            </button>
-            <button
-              onClick={() => setView('standings')}
-              className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                view === 'standings' ? 'bg-primary-foreground text-primary' : 'text-primary-foreground/80'
-              }`}
-            >
-              <Shield className="w-4 h-4 inline-block mr-2" />
-              Classificação
-            </button>
+          <div className="flex flex-col sm:flex-row gap-2">
+            {view === 'matches' && (
+              <div className="w-full sm:w-auto">
+                <RoundSelector
+                  selectedRound={selectedRound}
+                  onRoundChange={onRoundChange}
+                  totalRounds={38}
+                  variant="onGradient"
+                />
+              </div>
+            )}
+            <div className="flex bg-primary-foreground/20 rounded-lg p-1">
+              <button
+                onClick={() => setView('matches')}
+                className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  view === 'matches' ? 'bg-primary-foreground text-primary' : 'text-primary-foreground/80'
+                }`}
+              >
+                <Calendar className="w-4 h-4 inline-block mr-2" />
+                Jogos
+              </button>
+              <button
+                onClick={() => setView('standings')}
+                className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  view === 'standings' ? 'bg-primary-foreground text-primary' : 'text-primary-foreground/80'
+                }`}
+              >
+                <Shield className="w-4 h-4 inline-block mr-2" />
+                Classificação
+              </button>
+            </div>
           </div>
         </div>
       </div>
-
-      {view === 'matches' && (
-        <div className="w-full sm:w-auto">
-          <RoundSelector
-            selectedRound={selectedRound}
-            onRoundChange={onRoundChange}
-            totalRounds={38}
-            variant="onGradient"
-          />
-        </div>
-      )}
 
       {renderContent()}
     </div>
