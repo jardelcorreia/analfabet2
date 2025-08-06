@@ -81,11 +81,11 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
           </div>
           <div className="text-right">
             <span className="font-bold text-lg">{team.intPoints}</span>
-          <span className="text-muted-foreground text-sm"> pts</span>
+            <span className="text-muted-foreground text-sm"> pts</span>
+          </div>
         </div>
-      </div>
-      <div className="grid grid-cols-5 gap-2 mt-4 text-center text-sm">
-        <div>
+        <div className="grid grid-cols-5 gap-2 mt-4 text-center text-sm">
+          <div>
           <p className="font-semibold">{team.intPlayed}</p>
           <p className="text-muted-foreground text-xs">J</p>
         </div>
