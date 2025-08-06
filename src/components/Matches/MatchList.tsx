@@ -32,9 +32,6 @@ export const MatchList: React.FC<MatchListProps> = ({
   const [view, setView] = useState<'matches' | 'standings'>('matches');
   const { standings, loading: standingsLoading, error: standingsError } = useStandings();
   const [isMobile, setIsMobile] = React.useState(false);
-  const [isScrolled, setIsScrolled] = React.useState(false);
-  const headerRef = React.useRef<HTMLDivElement>(null);
-  const roundSelectorRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -42,22 +39,7 @@ export const MatchList: React.FC<MatchListProps> = ({
     };
     handleResize();
     window.addEventListener('resize', handleResize);
-
-    const handleScroll = () => {
-      if (headerRef.current && roundSelectorRef.current) {
-        const headerRect = headerRef.current.getBoundingClientRect();
-        const roundSelectorRect = roundSelectorRef.current.getBoundingClientRect();
-        setIsScrolled(roundSelectorRect.top < headerRect.bottom);
-      } else {
-        setIsScrolled(window.scrollY > 50);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   React.useEffect(() => {
@@ -180,7 +162,7 @@ export const MatchList: React.FC<MatchListProps> = ({
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div ref={headerRef} className={`bg-primary rounded-lg p-4 mb-4 text-primary-foreground ${isMobile ? 'sticky top-0 z-10' : ''}`}>
+      <div className={`bg-primary rounded-lg p-4 mb-4 text-primary-foreground ${isMobile ? 'sticky top-0 z-10' : ''}`}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold">{view === 'matches' ? 'Jogos' : 'Classificação'}</h1>
@@ -189,8 +171,8 @@ export const MatchList: React.FC<MatchListProps> = ({
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2">
-            {view === 'matches' && (!isMobile || !isScrolled) && (
-              <div ref={roundSelectorRef} className="w-full sm:w-auto">
+            {view === 'matches' && (
+              <div className="w-full sm:w-auto">
                 <RoundSelector
                   selectedRound={selectedRound}
                   onRoundChange={onRoundChange}
