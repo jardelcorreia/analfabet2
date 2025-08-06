@@ -72,7 +72,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
   const MobileCard = ({ team }: { team: SportsDbTable }) => {
     const teamInfo = timesInfo[team.strTeam as keyof typeof timesInfo];
     return (
-      <div className={`bg-card rounded-lg shadow-md p-4 mb-4 ${getPromotionColor(team.strPromotion)}`}>
+      <div className={`bg-card rounded-lg shadow-md p-4 mb-4 border ${getPromotionColor(team.strPromotion)}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <span className="font-bold text-lg w-8 text-center">{team.intRank}</span>
