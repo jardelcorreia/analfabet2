@@ -40,6 +40,12 @@ export const timesInfo = {
     escudo:
       "https://logodetimes.com/times/atletico-mineiro/logo-atletico-mineiro-256.png",
   },
+  "Atletico Mineiro": {
+    abrev: "CAM",
+    nome: "Atlético-MG",
+    escudo:
+      "https://logodetimes.com/times/atletico-mineiro/logo-atletico-mineiro-256.png",
+  },
   "Sport Club do Recife": {
     abrev: "SPT",
     nome: "Sport",

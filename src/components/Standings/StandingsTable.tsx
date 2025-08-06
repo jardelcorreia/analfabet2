@@ -1,6 +1,7 @@
 import React, { useLayoutEffect } from 'react';
 import { Shield, BarChart3, Star, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { SportsDbTable } from '../../types';
+import { timesInfo } from '../../lib/teams';
 
 interface StandingsTableProps {
   standings: SportsDbTable[];
@@ -68,16 +69,18 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
     return 'border-l-4 border-transparent';
   };
 
-  const MobileCard = ({ team }: { team: SportsDbTable }) => (
-    <div className={`bg-card rounded-lg shadow-md p-4 mb-4 ${getPromotionColor(team.strPromotion)}`}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <span className="font-bold text-lg w-8 text-center">{team.intRank}</span>
-          <img src={team.strTeamBadge} alt={team.strTeam} className="w-8 h-8" />
-          <span className="font-semibold">{team.strTeam}</span>
-        </div>
-        <div className="text-right">
-          <span className="font-bold text-lg">{team.intPoints}</span>
+  const MobileCard = ({ team }: { team: SportsDbTable }) => {
+    const teamInfo = timesInfo[team.strTeam as keyof typeof timesInfo];
+    return (
+      <div className={`bg-card rounded-lg shadow-md p-4 mb-4 ${getPromotionColor(team.strPromotion)}`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <span className="font-bold text-lg w-8 text-center">{team.intRank}</span>
+            <img src={teamInfo?.escudo || team.strTeamBadge} alt={team.strTeam} className="w-8 h-8" />
+            <span className="font-semibold">{teamInfo?.abrev || team.strTeam}</span>
+          </div>
+          <div className="text-right">
+            <span className="font-bold text-lg">{team.intPoints}</span>
           <span className="text-muted-foreground text-sm"> pts</span>
         </div>
       </div>
@@ -140,17 +143,19 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {standings.map(team => (
-                <tr key={team.idTeam} className={`hover:bg-muted ${getPromotionColor(team.strPromotion)}`}>
-                  <td className="px-6 py-4 whitespace-nowrap text-center font-bold">{team.intRank}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <img src={team.strTeamBadge} alt={team.strTeam} className="w-6 h-6 mr-3" />
-                      <span className="font-semibold">{team.strTeam}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center font-bold">{team.intPoints}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center">{team.intPlayed}</td>
+              {standings.map(team => {
+                const teamInfo = timesInfo[team.strTeam as keyof typeof timesInfo];
+                return (
+                  <tr key={team.idTeam} className={`hover:bg-muted ${getPromotionColor(team.strPromotion)}`}>
+                    <td className="px-6 py-4 whitespace-nowrap text-center font-bold">{team.intRank}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <img src={teamInfo?.escudo || team.strTeamBadge} alt={team.strTeam} className="w-6 h-6 mr-3" />
+                        <span className="font-semibold">{teamInfo?.nome || team.strTeam}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center font-bold">{team.intPoints}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">{team.intPlayed}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-green-500">{team.intWin}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-gray-500">{team.intDraw}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-red-500">{team.intLoss}</td>
