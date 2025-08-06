@@ -10,17 +10,6 @@ interface StandingsTableProps {
 }
 
 export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loading, error }) => {
-  const [isMobile, setIsMobile] = React.useState(false);
-
-  useLayoutEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -119,17 +108,15 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
         </h2>
       </div>
 
-      {isMobile ? (
-        <div className="p-4">
-          {standings.map(team => (
-            <MobileCard key={team.idTeam} team={team} />
-          ))}
-        </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-muted">
-              <tr>
+      <div className="p-4 sm:hidden">
+        {standings.map(team => (
+          <MobileCard key={team.idTeam} team={team} />
+        ))}
+      </div>
+      <div className="overflow-x-auto hidden sm:block">
+        <table className="w-full">
+          <thead className="bg-muted">
+            <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-12">Pos</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Clube</th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">P</th>
