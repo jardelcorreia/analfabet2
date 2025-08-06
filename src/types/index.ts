@@ -112,3 +112,42 @@ export interface SportsDbEvent {
   strStatus: string;
   idLeague: string;
 }
+
+export interface StandingsResponse {
+  table: SportsDbTable[];
+}
+
+export interface SportsDbTable {
+  idStanding: string;
+  intRank: string;
+  idTeam: string;
+  strTeam: string;
+  strTeamBadge: string;
+  idLeague: string;
+  strLeague: string;
+  strSeason: string;
+  strForm: string;
+  strDescription: string;
+  intPlayed: string;
+  intWin: string;
+  intLoss: string;
+  intDraw: string;
+  intGoalsFor: string;
+  intGoalsAgainst: string;
+  intGoalDifference: string;
+  intPoints: string;
+  strPromotion: string;
+  intGoalsFor_Home: string;
+  intGoalsAgainst_Home: string;
+  intWin_Home: string;
+  intDraw_Home: string;
+  intLoss_Home: string;
+  intTotal_Home: string;
+  intGoalsFor_Away: string;
+  intGoalsAgainst_Away: string;
+  intWin_Away: string;
+  intDraw_Away: string;
+  intLoss_Away: string;
+  intTotal_Away: string;
+  dateUpdated: string;
+}

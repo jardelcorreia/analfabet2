@@ -1,4 +1,4 @@
-import { SportsDbEvent, SportsDbResponse } from '../types';
+import { SportsDbEvent, SportsDbResponse, SportsDbTable, StandingsResponse } from '../types';
 
 const API_KEY = import.meta.env.VITE_SPORTSDB_API_KEY;
 const BASE_URL = 'https://www.thesportsdb.com/api/v1/json';
@@ -20,6 +20,16 @@ class SportsDB_API {
       return data.events;
     } catch (error) {
       console.error('Error fetching matches:', error);
+      return [];
+    }
+  }
+
+  async getBrasileiroStandings(): Promise<SportsDbTable[]> {
+    try {
+      const data = await this.request<StandingsResponse>(`/lookuptable.php?l=4351`);
+      return data.table;
+    } catch (error) {
+      console.error('Error fetching standings:', error);
       return [];
     }
   }
