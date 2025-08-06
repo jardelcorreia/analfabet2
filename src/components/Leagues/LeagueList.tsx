@@ -119,7 +119,7 @@ export const LeagueList: React.FC<LeagueListProps> = ({
           </button>
           <button
             onClick={() => setShowCreateForm(true)}
-            className="flex items-center justify-center space-x-2 px-4 py-2.5 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md font-medium"
+            className="flex items-center justify-center space-x-2 px-4 py-2.5 bg-white border-2 border-warning text-warning hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-warning dark:hover:bg-gray-700 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md font-medium"
           >
             <Plus className="w-4 h-4" />
             <span>Criar Liga</span>
@@ -338,7 +338,7 @@ export const LeagueList: React.FC<LeagueListProps> = ({
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => setShowCreateForm(true)}
-              className="px-6 py-3 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+              className="px-6 py-3 bg-white border-2 border-warning text-warning hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-warning dark:hover:bg-gray-700 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
             >
               Criar Liga
             </button>
