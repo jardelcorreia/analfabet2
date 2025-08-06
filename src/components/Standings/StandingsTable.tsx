@@ -117,56 +117,55 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
         <table className="w-full">
           <thead className="bg-muted">
             <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-12">Pos</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Clube</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">P</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">J</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">V</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">E</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">D</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">GP</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">GC</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">SG</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Últ. 5</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {standings.map(team => {
-                const teamInfo = timesInfo[team.strTeam as keyof typeof timesInfo];
-                return (
-                  <tr key={team.idTeam} className={`hover:bg-muted ${getPromotionColor(team.strPromotion)}`}>
-                    <td className="px-6 py-4 whitespace-nowrap text-center font-bold">{team.intRank}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <img src={teamInfo?.escudo || team.strTeamBadge} alt={team.strTeam} className="w-6 h-6 mr-3" />
-                        <span className="font-semibold">{teamInfo?.nome || team.strTeam}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center font-bold">{team.intPoints}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">{team.intPlayed}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-green-500">{team.intWin}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-gray-500">{team.intDraw}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-red-500">{team.intLoss}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalsFor}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalsAgainst}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalDifference}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <div className="flex justify-center space-x-1">
-                        {team.strForm.split('').map((result, index) => {
-                          if (result === 'W') return <ArrowUp key={index} className="w-4 h-4 text-green-500" />;
-                          if (result === 'L') return <ArrowDown key={index} className="w-4 h-4 text-red-500" />;
-                          if (result === 'D') return <Minus key={index} className="w-4 h-4 text-gray-500" />;
-                          return null;
-                        })}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-12">Pos</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Clube</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">P</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">J</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">V</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">E</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">D</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">GP</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">GC</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">SG</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Últ. 5</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {standings.map(team => {
+              const teamInfo = timesInfo[team.strTeam as keyof typeof timesInfo];
+              return (
+                <tr key={team.idTeam} className={`hover:bg-muted ${getPromotionColor(team.strPromotion)}`}>
+                  <td className="px-6 py-4 whitespace-nowrap text-center font-bold">{team.intRank}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <img src={teamInfo?.escudo || team.strTeamBadge} alt={team.strTeam} className="w-6 h-6 mr-3" />
+                      <span className="font-semibold">{teamInfo?.nome || team.strTeam}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center font-bold">{team.intPoints}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">{team.intPlayed}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center text-green-500">{team.intWin}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center text-gray-500">{team.intDraw}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center text-red-500">{team.intLoss}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalsFor}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalsAgainst}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalDifference}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="flex justify-center space-x-1">
+                      {team.strForm.split('').map((result, index) => {
+                        if (result === 'W') return <ArrowUp key={index} className="w-4 h-4 text-green-500" />;
+                        if (result === 'L') return <ArrowDown key={index} className="w-4 h-4 text-red-500" />;
+                        if (result === 'D') return <Minus key={index} className="w-4 h-4 text-gray-500" />;
+                        return null;
+                      })}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
