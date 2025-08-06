@@ -32,6 +32,7 @@ export const MatchList: React.FC<MatchListProps> = ({
   const [view, setView] = useState<'matches' | 'standings'>('matches');
   const { standings, loading: standingsLoading, error: standingsError } = useStandings();
   const [isMobile, setIsMobile] = React.useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -39,7 +40,16 @@ export const MatchList: React.FC<MatchListProps> = ({
     };
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   React.useEffect(() => {
@@ -191,7 +201,7 @@ export const MatchList: React.FC<MatchListProps> = ({
                 Classificação
               </button>
             </div>
-            {view === 'matches' && !isMobile && (
+            {view === 'matches' && (!isMobile || !isScrolled) && (
               <div className="w-full sm:w-auto">
                 <RoundSelector
                   selectedRound={selectedRound}
