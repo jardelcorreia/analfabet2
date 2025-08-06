@@ -86,28 +86,29 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
         </div>
         <div className="grid grid-cols-5 gap-2 mt-4 text-center text-sm">
           <div>
-          <p className="font-semibold">{team.intPlayed}</p>
-          <p className="text-muted-foreground text-xs">J</p>
-        </div>
-        <div>
-          <p className="font-semibold text-green-500">{team.intWin}</p>
-          <p className="text-muted-foreground text-xs">V</p>
-        </div>
-        <div>
-          <p className="font-semibold text-gray-500">{team.intDraw}</p>
-          <p className="text-muted-foreground text-xs">E</p>
-        </div>
-        <div>
-          <p className="font-semibold text-red-500">{team.intLoss}</p>
-          <p className="text-muted-foreground text-xs">D</p>
-        </div>
-        <div>
-          <p className="font-semibold">{team.intGoalDifference}</p>
-          <p className="text-muted-foreground text-xs">SG</p>
+            <p className="font-semibold">{team.intPlayed}</p>
+            <p className="text-muted-foreground text-xs">J</p>
+          </div>
+          <div>
+            <p className="font-semibold text-green-500">{team.intWin}</p>
+            <p className="text-muted-foreground text-xs">V</p>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-500">{team.intDraw}</p>
+            <p className="text-muted-foreground text-xs">E</p>
+          </div>
+          <div>
+            <p className="font-semibold text-red-500">{team.intLoss}</p>
+            <p className="text-muted-foreground text-xs">D</p>
+          </div>
+          <div>
+            <p className="font-semibold">{team.intGoalDifference}</p>
+            <p className="text-muted-foreground text-xs">SG</p>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="bg-card rounded-xl shadow-lg overflow-hidden">
