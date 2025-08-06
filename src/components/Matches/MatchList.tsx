@@ -152,7 +152,7 @@ export const MatchList: React.FC<MatchListProps> = ({
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="bg-primary rounded-lg p-4 mb-4 text-primary-foreground">
+      <div className="bg-primary rounded-lg p-4 mb-4 text-primary-foreground sticky top-0 z-10">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold">{view === 'matches' ? 'Jogos' : 'Classificação'}</h1>
