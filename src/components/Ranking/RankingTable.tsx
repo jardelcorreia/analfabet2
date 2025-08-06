@@ -184,7 +184,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             {/* Right: Points */}
             <div className="flex items-center space-x-1 bg-warning/10 rounded-full px-2 py-1 flex-shrink-0">
               <Trophy className="w-3 h-3 text-warning" />
-              <span className="text-sm font-bold text-yellow-800">
+              <span className="text-sm font-bold text-warning">
                 {userStat.total_points}
               </span>
             </div>
@@ -247,7 +247,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                       title={result.type === 'win' ? `Vitória na Rodada ${result.round}` : `Empate na Rodada ${result.round}`}
                     >
                       <span className={`text-xs font-medium ${
-                        result.type === 'win' ? 'text-green-800 dark:text-green-300' : 'text-yellow-800 dark:text-yellow-300'
+                        result.type === 'win' ? 'text-green-800 dark:text-green-300' : 'text-warning'
                       }`}>
                         R{result.round} ({result.type === 'win' ? 'V' : 'E'})
                       </span>
@@ -306,7 +306,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             <div className="flex items-center justify-center">
               <div className="flex items-center space-x-1 bg-warning/10 rounded-full px-3 py-1">
                 <Trophy className="w-4 h-4 text-warning" />
-                <span className="text-sm font-bold text-yellow-800">
+                <span className="text-sm font-bold text-warning">
                   {userStat.total_points}
                 </span>
               </div>
@@ -382,7 +382,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                         title={result.type === 'win' ? `Vitória na Rodada ${result.round}` : `Empate na Rodada ${result.round}`}
                       >
                         <span className={`text-sm font-medium ${
-                          result.type === 'win' ? 'text-green-800 dark:text-green-300' : 'text-yellow-800 dark:text-yellow-300'
+                          result.type === 'win' ? 'text-green-800 dark:text-green-300' : 'text-warning'
                         }`}>
                           R{result.round} ({result.type === 'win' ? 'V' : 'E'})
                         </span>
