@@ -14,6 +14,16 @@ interface LeagueBetsProps {
 export const LeagueBets: React.FC<LeagueBetsProps> = ({ league }) => {
   const [selectedRound, setSelectedRound] = useState<number | 'all' | undefined>();
   const { bets, loading, displayedRound } = useLeagueBets(league.id, selectedRound);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (displayedRound !== undefined && selectedRound !== displayedRound && selectedRound !== 'all') {
@@ -65,7 +75,7 @@ export const LeagueBets: React.FC<LeagueBetsProps> = ({ league }) => {
   return (
     <div className="bg-card rounded-xl shadow-lg overflow-hidden">
       {/* Header Compacto */}
-      <div className="bg-primary rounded-lg p-4 mb-4 text-primary-foreground">
+      <div className={`bg-primary rounded-lg p-4 mb-4 text-primary-foreground ${isMobile ? 'sticky top-0 z-10' : ''}`}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold">{league?.name}</h1>
