@@ -5,6 +5,9 @@ const BASE_URL = 'https://www.thesportsdb.com/api/v1/json';
 
 class SportsDB_API {
   async request(endpoint) {
+    if (!API_KEY) {
+      throw new Error('SPORTSDB_API_KEY environment variable not set.');
+    }
     const response = await fetch(`${BASE_URL}/${API_KEY}${endpoint}`);
 
     if (!response.ok) {
