@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const API_KEY = process.env.VITE_SPORTSDB_API_KEY;
+const API_KEY = process.env.SPORTSDB_API_KEY;
 const BASE_URL = 'https://www.thesportsdb.com/api/v1/json';
 
 class SportsDB_API {
