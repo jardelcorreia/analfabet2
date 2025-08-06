@@ -156,24 +156,25 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center font-bold">{team.intPoints}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">{team.intPlayed}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-green-500">{team.intWin}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-gray-500">{team.intDraw}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-red-500">{team.intLoss}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalsFor}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalsAgainst}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalDifference}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <div className="flex justify-center space-x-1">
-                      {team.strForm.split('').map((result, index) => {
-                        if (result === 'W') return <ArrowUp key={index} className="w-4 h-4 text-green-500" />;
-                        if (result === 'L') return <ArrowDown key={index} className="w-4 h-4 text-red-500" />;
-                        if (result === 'D') return <Minus key={index} className="w-4 h-4 text-gray-500" />;
-                        return null;
-                      })}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-green-500">{team.intWin}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-gray-500">{team.intDraw}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-red-500">{team.intLoss}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalsFor}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalsAgainst}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">{team.intGoalDifference}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <div className="flex justify-center space-x-1">
+                        {team.strForm.split('').map((result, index) => {
+                          if (result === 'W') return <ArrowUp key={index} className="w-4 h-4 text-green-500" />;
+                          if (result === 'L') return <ArrowDown key={index} className="w-4 h-4 text-red-500" />;
+                          if (result === 'D') return <Minus key={index} className="w-4 h-4 text-gray-500" />;
+                          return null;
+                        })}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
