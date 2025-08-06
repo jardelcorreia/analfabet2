@@ -61,6 +61,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
   }
 
   const getPromotionColor = (promotion: string) => {
+    if (typeof promotion !== 'string') return 'border-l-4 border-transparent';
     if (promotion.toLowerCase().includes('libertadores')) return 'border-l-4 border-blue-500';
     if (promotion.toLowerCase().includes('sul-americana')) return 'border-l-4 border-green-500';
     if (promotion.toLowerCase().includes('relegation')) return 'border-l-4 border-red-500';

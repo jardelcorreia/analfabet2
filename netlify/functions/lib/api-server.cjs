@@ -16,7 +16,8 @@ class SportsDB_API {
 
   async getBrasileiroStandings() {
     try {
-      const data = await this.request(`/lookuptable.php?l=4351&s=2025`);
+      const currentYear = new Date().getFullYear();
+      const data = await this.request(`/lookuptable.php?l=4351&s=${currentYear}`);
       return data.table;
     } catch (error) {
       console.error('Error fetching standings:', error);
