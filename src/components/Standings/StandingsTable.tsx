@@ -77,7 +77,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, loadi
           <div className="flex items-center space-x-3">
             <span className="font-bold text-lg w-8 text-center">{team.intRank}</span>
             <img src={teamInfo?.escudo || team.strTeamBadge} alt={team.strTeam} className="w-8 h-8" />
-            <span className="font-semibold">{teamInfo?.abrev || team.strTeam}</span>
+            <span className="font-semibold">{teamInfo?.nome || team.strTeam}</span>
           </div>
           <div className="text-right">
             <span className="font-bold text-lg">{team.intPoints}</span>
