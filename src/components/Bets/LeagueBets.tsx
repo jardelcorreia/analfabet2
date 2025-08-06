@@ -73,7 +73,7 @@ export const LeagueBets: React.FC<LeagueBetsProps> = ({ league }) => {
   }
 
   return (
-    <div className="bg-card rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-card rounded-xl shadow-lg">
       {/* Header Compacto */}
       <div className={`bg-primary rounded-lg p-4 mb-4 text-primary-foreground ${isMobile ? 'sticky top-0 z-10' : ''}`}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

@@ -437,7 +437,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   }
 
   return (
-    <div className="bg-card rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-card rounded-xl shadow-lg">
       {/* Header */}
       <div className={`bg-primary px-4 md:px-6 py-4 ${isMobile ? 'sticky top-0 z-10' : ''}`}>
         <div className="flex flex-col space-y-4">
