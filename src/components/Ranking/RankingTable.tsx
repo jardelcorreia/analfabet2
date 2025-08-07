@@ -446,10 +446,10 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             <span>Ranking de Jogadores</span>
           </h2>
 
-          {/* Controls - Stacked on mobile for better responsiveness */}
-          <div className="flex flex-col space-y-3">
-            {/* Search Bar - Full width on mobile */}
-            <div className="relative">
+          {/* Controls - Stacked on mobile, row on desktop */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            {/* Search Bar - Takes available space */}
+            <div className="relative flex-grow">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-primary-foreground/70" />
               <input
                 type="text"
@@ -460,9 +460,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               />
             </div>
 
-            {/* Filter and Round Selector - Side by side */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              {/* Top 10 Filter */}
+            {/* Filters - Fixed width */}
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowTopOnly(!showTopOnly)}
                 className={`flex items-center justify-center space-x-2 px-4 py-2 text-sm rounded-lg transition-all ${
@@ -475,8 +474,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                 <span>Top 10</span>
               </button>
 
-              {/* Round Selector - More space on mobile */}
-              <div className="flex-grow sm:flex-grow-0">
+              <div className="w-full sm:w-auto">
                 <RoundSelector
                   selectedRound={selectedRound}
                   onRoundChange={onRoundChange}
